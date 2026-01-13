@@ -1,0 +1,67 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <a href="{% url 'home' %}" class="my-3 btn btn-dark btn-sm">Go Back</a>
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <!-- the form for adding a book -->
+                <form method="POST" enctype="multipart/form-data" action="">
+                    <!-- this is for securing the form from malicious attacks -->
+                    {% csrf_token %}
+                    <!-- this is the label and input for the Title -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Book Title</label>
+                        <input required type="text" name="title" class="form-control" placeholder="Enter Book Title">
+                    </div>
+                    <!-- this is the label and input for the Author -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Author</label>
+                        <input required type="text" name="author" class="form-control" placeholder="Book Author">
+                    </div>
+                    <!-- this is the label and input for the Genre -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Genre</label>
+                        <select required name="genre" class="form-control">
+                            <option value="">Select Genre</option>
+                            <option value="fiction">Fiction</option>
+                            <option value="nonfiction">Non-Fiction</option>
+                            <option value="mystery">Mystery</option>
+                            <option value="scifi">Science Fiction</option>
+                            <option value="fantasy">Fantasy</option>
+                            <option value="thriller">Thriller</option>
+                            <option value="romance">Romance</option>
+                            <option value="biography">Biography</option>
+                            <option value="history">History</option>
+                            <option value="selfhelp">Self-Help</option>
+                        </select>
+                    </div>
+                    <!-- this is the label and input for the Rating -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Rating (1-5)</label>
+                        <input required type="number" name="rating" class="form-control" placeholder="Rating" min="1" max="5">
+                    </div>
+                    <!-- this is the label and input for the Review -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Review</label>
+                        <textarea required name="review" class="form-control" rows="4" placeholder="Write your review here..."></textarea>
+                    </div>
+                    <!-- this is the label and input for the Date Finished -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Date Finished (Optional)</label>
+                        <input type="date" name="date_finished" class="form-control">
+                    </div>
+                    <!-- this is the label and input for the Image -->
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Upload Image (Optional):</label>
+                        <input type="file" name="image" class="form-control" id="customFile" />
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-success btn-block mb-4">Add Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
