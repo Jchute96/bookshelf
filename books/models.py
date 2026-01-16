@@ -30,6 +30,17 @@ class Book(models.Model):
     # Order by title
     class Meta:
         ordering = ['title']
+        
+    # Method that returns total stars filled/unfilled corresponding to the book rating
+    def get_star_display(self):
+        filled_stars = '⭐' * self.rating
+        empty_stars = '☆' * (5 - self.rating)
+        
+        stars = filled_stars + empty_stars
+        
+        return stars
+        
+        
     
     
     
