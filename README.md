@@ -32,7 +32,6 @@ This is my first project using and learning Django. I followed [The Python Code'
 - [ ] Enhanced UI design with more vibrant/fun styling
 - [ ] Expanded navigation menu with additional options
 - [ ] Add external link field to book listings (Amazon, Goodreads, etc.)
-- [ ] Custom placeholder image for books without covers
 - [ ] Improved code documentation and comments
 - [ ] Statistics dashboard:
   - Total books read

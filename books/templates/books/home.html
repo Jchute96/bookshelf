@@ -1,7 +1,5 @@
 <!-- inheriting from the base file -->
 {% extends 'books/base.html' %}
-
-<!-- this will help render the images -->
 {% load static %}
 
 {% block content %}
@@ -29,7 +27,8 @@
                             {% if book.image %}
                                 <img src="{{ book.image.url }}" class="card-img-top" style="width:100%; height:auto; max-height:275px;" />
                             {% else %}
-                                <img src="https://via.placeholder.com/300x275?text=No+Image" class="card-img-top" style="height:275px;" />
+                                <!-- Display placeholder image if no book cover was uploaded -->
+                                <img src="/static/images/placeholder.png" class="card-img-top" style="height:275px;" />
                             {% endif %}
                         </a>
                         <div class="card-body">
