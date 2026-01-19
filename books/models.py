@@ -19,7 +19,7 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    review = models.TextField()
+    review = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     date_finished = models.DateField(null=True, blank=True)
