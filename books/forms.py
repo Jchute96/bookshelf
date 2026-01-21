@@ -18,5 +18,6 @@ class EditBookForm(ModelForm):
              'rating': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '5', 'placeholder': 'Rating (1-5)'}),
              'review': forms.Textarea(attrs={'class': 'form-control', 'rows': '4', 'placeholder': 'Write your review...'}),
              'date_finished': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+             'purchase_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Purchase Link'}),
              'image': forms.FileInput(attrs={'class': 'form-control'}),
         }

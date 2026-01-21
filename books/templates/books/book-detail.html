@@ -24,8 +24,12 @@
                     <strong>Review:</strong>
                     <p>{{ book.review }}</p>
                 </div>
+                {% if book.purchase_link %}
+                    <a target="_blank" rel="noopener noreferrer" href="{{ book.purchase_link }}" class="btn btn-primary btn-sm">Purchase Book</a>
+                {% endif %}
                 <a href="{% url 'edit-book' book.id %}" class="btn btn-success btn-sm">Edit Book</a>
                 <a href="{% url 'delete-book' book.id %}" class="btn btn-danger btn-sm">Delete Book</a>
+
             </div>
         </div>
     </div>

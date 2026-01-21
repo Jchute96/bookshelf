@@ -23,6 +23,7 @@ class Book(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
     date_finished = models.DateField(null=True, blank=True)
+    purchase_link = models.URLField(max_length=200, null=True, blank=True)
     
     def __str__(self):
         return f'{self.title}'

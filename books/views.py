@@ -49,6 +49,7 @@ def add_book(request):
         data = request.POST
         image = request.FILES.get('image')
         date_finished = data.get('date_finished') or None
+        purchase_link = data.get('purchase_link') or None
         
         book = Book.objects.create(
             title = data['title'],
@@ -56,6 +57,7 @@ def add_book(request):
             genre = data['genre'],
             rating = data['rating'],
             review = data['review'],
+            purchase_link = purchase_link,
             date_finished = date_finished,
             image = image
         )

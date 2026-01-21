@@ -17,6 +17,7 @@ This is my first project using and learning Django. I followed [The Python Code'
 ## Features
 
 - Add, view, edit, and delete books
+- Purchase link to book listings
 - 1-5 star rating system
 - Write and store book reviews
 - Upload book cover images
@@ -31,7 +32,6 @@ This is my first project using and learning Django. I followed [The Python Code'
 - [ ] Filter books by star rating and completion date
 - [ ] Enhanced UI design with more vibrant/fun styling
 - [ ] Expanded navigation menu with additional options
-- [ ] Add external link field to book listings (Amazon, Goodreads, etc.)
 - [ ] Improved code documentation and comments
 - [ ] Statistics dashboard:
   - Total books read
