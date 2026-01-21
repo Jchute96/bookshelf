@@ -7,11 +7,33 @@ from .forms import EditBookForm
 
 # Create your views here.
 
-# List all my books
+# Display books
 def home(request):
     # Retrieve all books from database
     books = Book.objects.all()
-    context = {'books': books}
+    
+    # Get all unique years for the filter dropdown
+    years = Book.objects.dates('date_finished', 'year', order='DESC')
+    
+    #Apply the filters if selected
+    
+    genre = request.GET.get('genre')
+    # If user submitted a genre to filter by
+    if genre:
+        books = books.filter(genre=genre)
+    
+    rating = request.GET.get('rating')
+    # If user submitted a rating to filter by
+    if rating:
+        books = books.filter(rating=rating)
+    
+    year = request.GET.get('year')
+    # If user submitted a year to filter by
+    if year:
+        books = books.filter(date_finished__year=year)
+    
+        
+    context = {'books': books, 'years': years}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument
