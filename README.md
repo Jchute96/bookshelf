@@ -26,10 +26,10 @@ This is my first project using and learning Django. I followed [The Python Code'
 - Alphabetically sorted book display
 - Bootstrap-styled responsive interface
 - Dynamically display star ratings on home page book cards
+- Filter books by genre, star rating, and completion date
 
 ## Future Features
 
-- [ ] Filter books by star rating and completion date
 - [ ] Enhanced UI design with more vibrant/fun styling
 - [ ] Expanded navigation menu with additional options
 - [ ] Improved code documentation and comments
