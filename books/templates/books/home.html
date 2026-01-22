@@ -82,6 +82,14 @@
                         </div>
                     </div>
                 </div>
+                <!-- If there are no books that match the filters display an alert letting the user know -->
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center" role="alert">
+                        <h5>No books found matching your filters</h5>
+                        <p>Try changing your filter options or <a href="{% url 'home' %}">clear all filters</a></p>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
         </div>
