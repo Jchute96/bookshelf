@@ -2,7 +2,7 @@
 
 ## About This Project
 
-A Django web application I built to track my personal reading collection. My first Django project, focused on practicing MVT architecture, CRUD operations, forms, and database integration.
+A Django web application I built to track my personal book collection. My first Django project, focused on practicing MVT architecture, CRUD operations, forms, and database integration.
 
 ## Features
 
