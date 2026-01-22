@@ -1,23 +1,13 @@
 # BookShelf - Personal Book Tracker
 
-A Django web application for tracking the books I have read, including ratings, reviews, and dates finished.
-
 ## About This Project
 
-This is my first project using and learning Django. I followed [The Python Code's Django Bookstore tutorial](https://thepythoncode.com/article/build-bookstore-app-with-django-backend-python) as a foundation and customized it for personal book tracking.
-
-### Changes I made from Tutorial
-- Replaced bookstore fields (price, ISBN) with personal tracking fields (rating, review, genre, date_finished)
-- Added 10 genre categories with dropdown selection
-- Implemented 1-5 star rating system with validation
-- Added optional date tracking for completion dates
-- Customized all templates and forms for book tracking workflow
-
+A Django web application I built to track my personal reading collection. My first Django project, focused on practicing MVT architecture, CRUD operations, forms, and database integration.
 
 ## Features
 
 - Add, view, edit, and delete books
-- Purchase link to book listings
+- Store purchase links for books
 - 1-5 star rating system
 - Write and store book reviews
 - Upload book cover images
@@ -39,12 +29,15 @@ This is my first project using and learning Django. I followed [The Python Code'
   - Most read genre
   - Average rating
   - Reading trends over time
-     
+      
 ## Tech Stack
-- **Backend:** Django 6.0.1
-- **Language:** Python 3.14
-- **Database:** SQLite
-- **Frontend:** HTML, Bootstrap 5
+- Backend: Django
+- Language: Python
+- Database: SQLite
+- Frontend: HTML, Bootstrap 5
+
+## Credits
+Inspired by [The Python Code's Django Bookstore tutorial](https://thepythoncode.com/article/build-bookstore-app-with-django-backend-python) and expanded into a personal book-tracking app.
 
 
 
