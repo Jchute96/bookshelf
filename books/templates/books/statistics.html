@@ -1,0 +1,115 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<div class="container mb-4">
+    <div class="row">
+        <!-- side navbar here -->
+        <div class="col-md-3 mt-3">
+            <div class="card">
+                <h4 class="card-header px-3">Menu</h4>
+                <ul class="list-group list-group-light list-group-small">
+                    <li class="list-group-item px-3"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="list-group-item px-3"><a href="{% url 'statistics' %}">Statistics</a></li>
+                </ul>
+                <a href="{% url 'add-book' %}" class="m-2 btn btn-dark btn-sm">Add Book</a>
+            </div>
+        </div>
+
+        <!-- Statistics Content -->
+        <div class="col-md-9 mt-3">
+            <h2 class="mb-4">Your Reading Stats</h2>
+            <!-- Display the total books read and average rating for all books cards to user -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Total Books Read</h3>
+                            {% if total_books > 0 %}
+                                <h1 class="display-3">{{ total_books }} 📚</h1>
+                            {% else %}
+                                <p class="text-muted">No books yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h3 class="card-title">Average Rating</h3>
+                            {% if avg_rating > 0 %}
+                                <h1 class="display-3">{{ avg_rating }} ⭐</h1>
+                            {% else %}
+                                <p class="text-muted">No ratings yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Create new row that will display the 3 most recent books that received 5 star ratings -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="mb-3">Your Recent 5-Star Favorites</h3>
+                    {% if top3_recent_books %}
+                        <div class="row">
+                            {% for book in top3_recent_books %}
+                            <div class="col-md-4">
+                                <div class="card" style="height: 550px;">
+                                    <a href="{% url 'book-detail' book.id %}">
+                                        {% if book.image %}
+                                            <img src="{{ book.image.url }}" class="card-img-top" style="height: 450px; object-fit: cover;" alt="{{ book.title}}">
+                                        {% else %}
+                                            <img src="/static/images/placeholder.png" class="card-img-top" style="height: 450px; object-fit: cover;" alt="No image">
+                                        {% endif %}
+                                    </a>
+                                    <div class="card-body text-center">
+                                        <!-- If title is more than 2 lines add ellipsis -->
+                                        <h5 class="card-title" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                            {{ book.title }}
+                                        </h5>
+                                        <p class="text-muted">by {{ book.author }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No recent 5-star books yet! Start rating your favorites.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Display individual user stats for each genre -->
+             <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="mb-3">Your Stats by Genre</h3>
+                    {% if genre_stats %}
+                        <div class="row">
+                            {% for genre in genre_stats %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <!-- Capitalize and display genre name -->
+                                        <h5 class="card-title">{{ genre.genre_name }}</h5>
+                                        <!-- Add genre icon image -->
+                                        <img src="/static/images/genres/{{ genre.genre }}.png" alt="{{ genre.genre }}" style="width: 200px; height: 200px; margin-bottom: 15px;">
+                                        <p class="mb-1"><strong>Total {{genre.genre_name }} Books Read:</strong> {{ genre.count }}</p>
+                                        <!-- Display average rating to one decimal place -->
+                                        <p class="mb-0"><strong>Average Rating:</strong> {{ genre.avg_rating|floatformat:1 }} ⭐</p>   
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No books read yet. Start adding books to see genre stats!
+                        </div>
+                    {% endif %}
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+        

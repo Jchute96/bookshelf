@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Book
 from .forms import EditBookForm
+from django.db.models import Count, Avg, Case, When, Value, CharField
+from django.db.models.functions import ExtractYear
 
-
-
-# Create your views here.
 
 # Display books
 def home(request):
@@ -93,6 +92,74 @@ def delete_book(request, id):
     
     context = {'book': book}
     return render(request, 'books/delete-book.html', context)
+
+# Displays statistics
+def statistics(request):
+    books = Book.objects.all()
+    # Get the number of total books read
+    total_books = books.count()
+    
+    # Get the average rating of all books
+    avg_rating = books.aggregate(Avg('rating'))['rating__avg']
+    
+    # Verify that there were ratings to average and if not set it to 0
+    if avg_rating:
+        avg_rating = round(avg_rating, 1)
+    else:
+        avg_rating = 0
+        
+
+    # Groups the books by each of their genres using .values() 
+    # Use Case to create a new key/value pair for each ggenre name so we can display correct one in html later
+    # then uses annotate and Count() to count the amount of id's seen for each book in each genre
+    # uses Avg() to calculate the average rating for books in that genre
+    # use order_by('-count') to sort by count, highest first
+    genre_stats = books.values('genre').annotate(
+        genre_name=Case(
+            When(genre='fiction', then=Value('Fiction')),
+            When(genre='nonfiction', then=Value('Non-Fiction')),
+            When(genre='mystery', then=Value('Mystery')),
+            When(genre='scifi', then=Value('Science Fiction')),
+            When(genre='fantasy', then=Value('Fantasy')),
+            When(genre='thriller', then=Value('Thriller')),
+            When(genre='romance', then=Value('Romance')),
+            When(genre='biography', then=Value('Biography')),
+            When(genre='history', then=Value('History')),
+            When(genre='selfhelp', then=Value('Self-Help')),
+            output_field=CharField(),
+        ), count = Count('id'), avg_rating = Avg('rating')).order_by('-count')
+    
+    # Group all of the authors and count how many books user has read for them. Order authors by authors with most books read and only store top 5
+    author_stats = books.values('author').annotate(count = Count('id')).order_by('-count')[:5]
+    
+    # Filter out the books that do not have dates then use annotate and ExtractYear() to get the years from the date_finished attribute
+    # Once that is done group the years by year and count how many books are associated with each year. Then order them by most recent years to least recent
+    year_stats = books.filter(date_finished__isnull = False).annotate(year = ExtractYear('date_finished')).values('year').annotate(count = Count('id')).order_by('-year')
+    
+    # Filter books to get the books that have a 5 star rating and a date_finished then order them by most recently finished and get top 3
+    top3_recent_books = books.filter(rating=5, date_finished__isnull = False).order_by('-date_finished')[:3]
+    
+    
+    
+    # Create context key value pairs to be used in the html for statistics
+    context = {
+        'total_books': total_books,
+        'avg_rating': avg_rating,
+        'genre_stats': genre_stats,
+        'author_stats': author_stats,
+        'year_stats': year_stats,
+        'top3_recent_books': top3_recent_books
+    }
+    
+    # Return statistics.html file filled with context data to browser
+    return render(request, 'books/statistics.html', context)
+    
+    
+    
+    
+    
+    
+    
 
 
 
