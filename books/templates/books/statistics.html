@@ -48,7 +48,7 @@
             <!-- Create new row that will display the 3 most recent books that received 5 star ratings -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <h3 class="mb-3">Your Recent 5-Star Favorites</h3>
+                    <h3 class="mb-3">Recent 5-Star Favorites</h3>
                     {% if top3_recent_books %}
                         <div class="row">
                             {% for book in top3_recent_books %}
@@ -80,9 +80,9 @@
                 </div>
             </div>
             <!-- Display individual user stats for each genre -->
-             <div class="row mb-4">
+            <div class="row mb-4">
                 <div class="col-12">
-                    <h3 class="mb-3">Your Stats by Genre</h3>
+                    <h3 class="mb-3">Stats by Genre</h3>
                     {% if genre_stats %}
                         <div class="row">
                             {% for genre in genre_stats %}
@@ -107,6 +107,51 @@
                         </div>
                     {% endif %}
                 </div>
+            </div>
+            <!-- Display Top Authors and Books by Year side by side -->
+             <div class="row mb-4">
+                <!-- Column for favorite authors -->
+                <div class="col-md-6">
+                    <h3 class="mb-3">Top 5 Authors</h3>
+                    {% if author_stats %}
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- List authors in numbered order and remove outer borders of list items -->
+                                <ol class="list-group list-group-numbered list-group-flush">
+                                    {% for author in author_stats %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><strong>{{ author.author }}</strong></span>
+                                        <!-- Display the count and change book to books if count is more than 1 -->
+                                        <span class="badge text-muted">{{ author.count }} book{{ author.count|pluralize }}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- Column to display books per year stats -->
+                <div class="col-md-6">
+                    <h3 class="mb-3">Books Read per Year</h3>
+                    {% if year_stats %}
+                        <div class="card">
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% for year_data in year_stats %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span><strong>{{ year_data.year }}</strong></span>
+                                        <span class="badge text-muted">{{ year_data.count }} book{{ year_data.count|pluralize }}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No year data yet. Add finished dates to your books!
+                        </div>
+                    {% endif %}
+                </div>     
              </div>
         </div>
     </div>
