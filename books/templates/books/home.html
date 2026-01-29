@@ -61,7 +61,7 @@
                 {% for book in books %}
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
-                        <a href="">
+                        <a href="{% url 'book-detail' book.id %}">
                             <!-- this is the book image -->
                             {% if book.image %}
                                 <img src="{{ book.image.url }}" class="card-img-top" style="width:100%; height:auto; max-height:325px;" />

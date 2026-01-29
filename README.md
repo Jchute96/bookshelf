@@ -17,7 +17,7 @@ A Django web application I built to track my personal book collection. My first 
 - Bootstrap-styled responsive interface
 - Dynamically display star ratings on home page book cards
 - Filter books by genre, star rating, and completion date
-- Statistics Dashboard
+- Statistics Dashboard:
   - Total books read and average rating overview
   - Recent 5-star books display
   - Detailed stats by genre with custom icons
