@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Book
 from .forms import EditBookForm
-from django.db.models import Count, Avg, Case, When, Value, CharField
+from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
 
 
@@ -13,6 +13,16 @@ def home(request):
     
     # Get all unique years for the filter dropdown
     years = Book.objects.dates('date_finished', 'year', order='DESC')
+    
+    # Get search value if one was entered
+    search = request.GET.get('search')
+    
+    if search:
+        # If there is a search value use filter and Q objects to find titles or authors that contains the search input.
+        # icontains checks if the attributes contain the search and is case insensitive.
+        # Q objects allows us to filter using and, or, and not instead of just and
+        books = books.filter(
+            Q(title__icontains=search) | Q(author__icontains=search))
     
     #Apply the filters if selected
     
@@ -32,7 +42,7 @@ def home(request):
         books = books.filter(date_finished__year=year)
     
     # Include these variables that will be used in the templates
-    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year}
+    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year, 'search': search}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument

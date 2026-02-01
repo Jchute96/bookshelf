@@ -16,8 +16,16 @@
 
             <!-- Form to filter in navbar using dropdowns-->
             <div class ="p-3">
-                <h5 class="mb-3">Filter By</h5>
                 <form method="GET" action="">
+                <div class="mb-3">
+                    <!-- Create a horizontal grouping for the search input -->
+                    <div class="input-group">
+                        <!-- Create a input box for input to use to search books or authors. If user enters a search value display that value when page updates to filter the search results -->
+                        <input type="search" id="search" name="search" class="form-control" placeholder="Search Books" {% if search %} value="{{search}}"{% endif %}>
+                        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                    </div>
+                </div>
+                <h5 class="mb-3">Filter By</h5>
                     <label class="form-label font-weight-bold">Genre</label>
                     <select name="genre" class="form-control">
                         <!-- Genre filter options. Display current selected filter if chosen by user -->
