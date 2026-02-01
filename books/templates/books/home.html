@@ -20,32 +20,36 @@
                 <form method="GET" action="">
                     <label class="form-label font-weight-bold">Genre</label>
                     <select name="genre" class="form-control">
+                        <!-- Genre filter options. Display current selected filter if chosen by user -->
                         <option value="">All Genres</option>
-                        <option value="fiction">Fiction</option>
-                        <option value="nonfiction">Non-Fiction</option>
-                        <option value="mystery">Mystery</option>
-                        <option value="scifi">Science Fiction</option>
-                        <option value="fantasy">Fantasy</option>
-                        <option value="thriller">Thriller</option>
-                        <option value="romance">Romance</option>
-                        <option value="biography">Biography</option>
-                        <option value="history">History</option>
-                        <option value="selfhelp">Self-Help</option>
+                        <option value="fiction" {% if genre == "fiction" %}selected{% endif %}>Fiction</option>
+                        <option value="nonfiction" {% if genre == "nonfiction" %}selected{% endif %}>Non-Fiction</option>
+                        <option value="mystery" {% if genre == "mystery" %}selected{% endif %}>Mystery</option>
+                        <option value="scifi" {% if genre == "scifi" %}selected{% endif %}>Science Fiction</option>
+                        <option value="fantasy" {% if genre == "fantasy" %}selected{% endif %}>Fantasy</option>
+                        <option value="thriller" {% if genre == "thriller" %}selected{% endif %}>Thriller</option>
+                        <option value="romance" {% if genre == "romance" %}selected{% endif %}>Romance</option>
+                        <option value="biography" {% if genre == "biography" %}selected{% endif %}>Biography</option>
+                        <option value="history" {% if genre == "history" %}selected{% endif %}>History</option>
+                        <option value="selfhelp" {% if genre == "selfhelp" %}selected{% endif %}>Self-Help</option>
                     </select>
                     <label class="form-label font-weight-bold mt-3">Rating</label>
                     <select name="rating" class="form-control">
+                        <!-- Rating filter options. Display current selected filter if chosen by user -->
                         <option value="">All Ratings</option>
-                        <option value="5">5 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="2">2 Stars</option>
-                        <option value="1">1 Star</option>
+                        <option value="5" {% if rating == "5" %}selected{% endif %}>5 Stars</option>
+                        <option value="4" {% if rating == "4" %}selected{% endif %}>4 Stars</option>
+                        <option value="3" {% if rating == "3" %}selected{% endif %}>3 Stars</option>
+                        <option value="2" {% if rating == "2" %}selected{% endif %}>2 Stars</option>
+                        <option value="1" {% if rating == "1" %}selected{% endif %}>1 Star</option>
                     </select>
                     <label class="form-label font-weight-bold mt-3">Year Finished</label>
                     <select name="year" class="form-control">
+                        <!-- Display all years to filter by. Display current selected filtered year if chosen by user -->
                         <option value="">All Years</option>
-                        {% for year in years %}
-                        <option value="{{ year.year }}">{{ year.year }}</option>
+                        {% for book_year in years %}
+                        <!-- Display each year user has entered and use |stringformat:"s" to convert the year to a string to be compared to determine if selected or not -->
+                        <option value="{{ book_year.year }}" {% if year == book_year.year|stringformat:"s" %}selected{% endif %}>{{ book_year.year }}</option>
                         {% endfor %}
                     </select>
                     <button type="submit" class="btn btn-primary btn-sm mt-2 w-100">Apply</button>

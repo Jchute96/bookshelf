@@ -17,22 +17,22 @@ def home(request):
     #Apply the filters if selected
     
     genre = request.GET.get('genre')
-    # If user submitted a genre to filter by
+    # Filter by a certain genre if selected by user
     if genre:
         books = books.filter(genre=genre)
     
     rating = request.GET.get('rating')
-    # If user submitted a rating to filter by
+    # Filter by a certain rating if selected by user
     if rating:
         books = books.filter(rating=rating)
     
     year = request.GET.get('year')
-    # If user submitted a year to filter by
+    # Filter by a certain year if selected by user
     if year:
         books = books.filter(date_finished__year=year)
     
-        
-    context = {'books': books, 'years': years}
+    # Include these variables that will be used in the templates
+    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument
