@@ -40,9 +40,25 @@ def home(request):
     # Filter by a certain year if selected by user
     if year:
         books = books.filter(date_finished__year=year)
-    
+        
+    sort = request.GET.get('sort')
+    # Apply the specific sort selected by user if chosen
+    match sort:
+        case 'title_asc':
+            books = books.order_by('title')
+        case 'author_asc':
+            books = books.order_by('author')
+        case 'rating_desc':
+            books = books.order_by('-rating')
+        case 'rating_asc':
+            books = books.order_by('rating')
+        case 'date_desc':
+            books = books.order_by('-date_finished')
+        case 'date_asc':
+            books = books.order_by('date_finished')
+            
     # Include these variables that will be used in the templates
-    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year, 'search': search}
+    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument
