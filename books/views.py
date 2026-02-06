@@ -8,11 +8,11 @@ from django.db.models.functions import ExtractYear
 
 # Display books
 def home(request):
-    # Retrieve all books from database
-    books = Book.objects.all()
+    # Retrieve all books from database that belong to the logged in user
+    books = Book.objects.filter(user=request.user)
     
     # Get all unique years for the filter dropdown
-    years = Book.objects.dates('date_finished', 'year', order='DESC')
+    years = books.dates('date_finished', 'year', order='DESC')
     
     # Get search value if one was entered
     search = request.GET.get('search')
@@ -77,6 +77,7 @@ def add_book(request):
         purchase_link = data.get('purchase_link') or None
         
         book = Book.objects.create(
+            user = request.user,
             title = data['title'],
             author = data['author'],
             genre = data['genre'],
@@ -93,8 +94,8 @@ def add_book(request):
 
 # Edit a book's info and takes id as an argument
 def edit_book(request, id):
-    # Get book to update
-    book = Book.objects.get(pk=id)
+    # Get book to update and make sure logged in user matches the book id
+    book = Book.objects.get(pk=id, user=request.user)
     
     form = EditBookForm(instance=book)
     
@@ -111,7 +112,8 @@ def edit_book(request, id):
 
 # Delete a book, takes id as argument
 def delete_book(request, id):
-    book = Book.objects.get(pk=id)
+    # Grab the book that matches the id and belongs to the current logged in user
+    book = Book.objects.get(pk=id, user=request.user)
     if request.method == 'POST':
         book.delete()
         return redirect('home')
@@ -121,7 +123,8 @@ def delete_book(request, id):
 
 # Displays statistics
 def statistics(request):
-    books = Book.objects.all()
+    #  Get all the books that belong to the current logged in user
+    books = Book.objects.filter(user=request.user)
     # Get the number of total books read
     total_books = books.count()
     
