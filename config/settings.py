@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'books',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -123,4 +124,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
+# Redirect to home books page when a user logs in
+# Redirect to login page when user logs out
+LOGIN_REDIRECT_URL = '/books/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

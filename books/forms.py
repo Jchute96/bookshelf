@@ -8,8 +8,8 @@ class EditBookForm(ModelForm):
     class Meta:
         # the Model from which the form will inherit from
         model = Book
-        # the fields we want from the Model
-        fields = '__all__'
+        # Include all fields except the user field
+        exclude =['user']
         # styling the form with bootstrap classes
         widgets = {
              'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Book Title'}),
