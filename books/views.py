@@ -4,9 +4,12 @@ from .models import Book
 from .forms import EditBookForm
 from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
+from django.contrib.auth.decorators import login_required
 
+# Use @login_required to make sure only logged in users can access the views
 
 # Display books
+@login_required
 def home(request):
     # Retrieve all books from database that belong to the logged in user
     books = Book.objects.filter(user=request.user)
@@ -62,6 +65,7 @@ def home(request):
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument
+@login_required
 def book_detail(request, id):
     # Query a book by its id
     book = Book.objects.get(pk=id)
@@ -69,6 +73,7 @@ def book_detail(request, id):
     return render(request, 'books/book-detail.html', context)
 
 # Add a book
+@login_required
 def add_book(request):
     if request.method == 'POST':
         data = request.POST
@@ -93,6 +98,7 @@ def add_book(request):
     return render(request, 'books/add-book.html')
 
 # Edit a book's info and takes id as an argument
+@login_required
 def edit_book(request, id):
     # Get book to update and make sure logged in user matches the book id
     book = Book.objects.get(pk=id, user=request.user)
@@ -111,6 +117,7 @@ def edit_book(request, id):
     return render(request, 'books/update-book.html', context)
 
 # Delete a book, takes id as argument
+@login_required
 def delete_book(request, id):
     # Grab the book that matches the id and belongs to the current logged in user
     book = Book.objects.get(pk=id, user=request.user)
@@ -122,6 +129,7 @@ def delete_book(request, id):
     return render(request, 'books/delete-book.html', context)
 
 # Displays statistics
+@login_required
 def statistics(request):
     #  Get all the books that belong to the current logged in user
     books = Book.objects.filter(user=request.user)
