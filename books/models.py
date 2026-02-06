@@ -1,3 +1,5 @@
+# Imports user model for user profiles
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -16,6 +18,8 @@ class Book(models.Model):
         ('selfhelp', 'Self-Help'),
     ]
     
+    # When user deletes profile delete all of the data associated with their foreign key
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
