@@ -1,4 +1,6 @@
 {% extends 'books/base.html' %}
+<!-- Import the crispy form templates to use -->
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container">
@@ -9,24 +11,15 @@
                 <div class="card-body">
                     <h2 class="text-center mb-4">Login to BookShelf</h2>
 
-                    {% if form.errors %}
-                        <div class="alert alert-danger">
-                            Invalid username or password. Please try again.
-                        </div>
-                    {% endif %}
-
                     <form method="POST">
                         <!-- Generates a token to verify form submission is legit-->
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            {{ form.username }}
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            {{ form.password }}
-                        </div>
+                        <!-- Pipe the form through crispy forms to make it look nice-->
+                        {{ form|crispy }}
                         <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <p class="text-center mt-3">
+                            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                        </p>
                     </form>
                 </div>
             </div>

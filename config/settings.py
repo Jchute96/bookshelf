@@ -31,14 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Accounts as first so that Django uses the templates for password reset there
+    # before the templates in django.contrib.auth
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'books',
-    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +132,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Redirect to login page when user logs out
 LOGIN_REDIRECT_URL = '/books/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# Crispy forms configuration
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# Email configuration (prints emails to console for development)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .forms import CustomUserCreationForm
 
 # Create your views here.
 
@@ -8,8 +8,8 @@ def register(request):
     # If user submits the registration form
     if request.method == 'POST':
         
-        #  Create and fill form with the user entered data
-        form = UserCreationForm(request.POST)
+        #  Create and fill customized form with the user entered data
+        form = CustomUserCreationForm(request.POST)
         
         # Verify the user entered data is valid
         if form.is_valid():
@@ -21,8 +21,8 @@ def register(request):
             return redirect('home')
     #  If user has not submitted form
     else:
-        # Display empty form
-        form = UserCreationForm()
+        # Display empty customized form
+        form = CustomUserCreationForm()
         
     context = {'form': form}
         
