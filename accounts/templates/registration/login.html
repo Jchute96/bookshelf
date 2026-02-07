@@ -17,9 +17,10 @@
                         <!-- Pipe the form through crispy forms to make it look nice-->
                         {{ form|crispy }}
                         <button type="submit" class="btn btn-primary w-100">Login</button>
-                        <p class="text-center mt-3">
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'register' %}">Create New Account</a>
                             <a href="{% url 'password_reset' %}">Forgot Password?</a>
-                        </p>
+                        </div>
                     </form>
                 </div>
             </div>
