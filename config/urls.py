@@ -22,8 +22,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #  Direct any urls starting with /accounts/ to use Django's pre built authentication URLs
+    #  Direct any urls starting with /accounts/ and that are in Django's pre built authentication URLs
     path('accounts/', include('django.contrib.auth.urls')),
+    #  Direct any urls starting with /accounts/ to the custom accounts URLs
+    path('accounts/', include('accounts.urls')),
     path('books/', include('books.urls')),
 ]
 
