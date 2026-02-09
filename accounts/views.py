@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm
+from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm
 
 
 # Create your views here.
@@ -80,11 +80,39 @@ def edit_email(request):
     
     context = {'form': form}
     return render(request, 'accounts/edit_email.html', context)
-     
-        
-    
-    
-    
-            
-            
 
+# Account deletion page
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST)
+        
+        if form.is_valid():
+            # Get the password from the form and validate and clean the user input
+            password = form.cleaned_data['password']
+            
+            # If password entered matches the active users password
+            if request.user.check_password(password):
+                # Delete current user
+                request.user.delete()
+                # Redirect to registration page
+                return redirect('account_deleted')
+            else:
+                # Display error message if passwords do not match
+                form.add_error('password', 'Incorrect password. Please try again.')
+    
+    # Display form  
+    else:
+        form = DeleteAccountForm()
+            
+    context = {'form': form}
+    return render(request, 'accounts/delete_account.html', context)
+                
+# Confirmation of account deletion for user
+def account_deleted(request):
+    return render(request, 'accounts/account_deleted.html')            
+                
+                
+                
+            
+            

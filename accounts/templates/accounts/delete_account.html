@@ -1,0 +1,25 @@
+{% extends 'books/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card border-danger shadow-lg"> <!-- Red border! -->
+                <div class="card-body">
+                    <h2 class="text-center text-danger mb-4">⚠️ Delete Account</h2>
+                    <p class="text-center"><strong>Deleting your account will permanently remove all your information from BookShelf. This action cannot be undone.</strong></p>
+                    <form method="POST">
+                        <!-- Generates a token to verify form submission is legit-->
+                        {% csrf_token %}
+                        <!-- Pipe the form through crispy forms to make it look nice-->
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-danger w-100">Yes, Delete My Account</button>
+                        <a href="{% url 'profile' %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

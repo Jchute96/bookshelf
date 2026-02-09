@@ -15,7 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
         # Fields to include in the form
         fields = ['username', 'email', 'password1', 'password2']
 
-#  Inherit fields from the Model declared in the Meta
+# Inherit fields from the Model declared in the Meta
 class EditUsernameForm(forms.ModelForm):
     
     class Meta:
@@ -31,7 +31,7 @@ class EditUsernameForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter new username'})
         }
         
-#  Inherit fields from the Model declared in the Meta
+# Inherit fields from the Model declared in the Meta
 class EditEmailForm(forms.ModelForm):
     class Meta:
         model = User
@@ -42,6 +42,21 @@ class EditEmailForm(forms.ModelForm):
         widgets = {
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter new email'})
         }
+
+# forms.Form lets us create a form from scratch
+class DeleteAccountForm(forms.Form):
+    # Create password field
+    password = forms.CharField(
+        # Make it so text is not visible
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your password to confirm deletion'
+        }),
+        
+        # Label shown above the input fiedl
+        label='Confirm your password'
+    )
+    
     
         
         

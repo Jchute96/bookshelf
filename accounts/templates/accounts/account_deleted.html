@@ -1,0 +1,21 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <!-- Add a card with a shadowing effect -->
+             <div class="card shadow-lg">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Account Deleted</h2>
+                    <p class="text-center"><strong>Your account and all data have been permanently deleted!</strong></p>
+                    <!-- Button that returns user to registration page -->
+                    <p class="text-center mt-3">
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary">Create New Account</a>
+                    </p>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
