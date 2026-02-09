@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Profile
 
 # Class that inherits Django's built in form inheriting all features and security measures
 class CustomUserCreationForm(UserCreationForm):
@@ -56,6 +57,22 @@ class DeleteAccountForm(forms.Form):
         # Label shown above the input fiedl
         label='Confirm your password'
     )
+
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
+        
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'class': 'form-control',
+                # Make it so that only images are shown in the file picker for the user
+                'accept': 'image/*'
+            })
+        }
+        
+        
     
     
         

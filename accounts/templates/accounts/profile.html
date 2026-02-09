@@ -16,30 +16,44 @@
             </div>
         </div>
 
-        <!-- Profile information -->
+        <!-- Profile Content -->
         <div class="col-md-9 mt-3">
             <h2 class="mb-4">My Profile</h2>
+            
+            <!-- Profile Picture -->
+            <div class="mb-4 text-center">
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px;">
+                        <span style="font-size: 60px;">👤</span>
+                    </div>
+                {% endif %}
+                <div class="mt-3">
+                    <a href="{% url 'upload_profile_picture' %}" class="btn btn-primary btn-sm">Upload Profile Picture</a>
+                </div>
+            </div>
 
-            <!-- Account information -->
+            <!-- Account Information -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Account Information</h4>
                     <div class="row mb-3">
                         <div class="col-md-3"><strong>Username:</strong></div>
-                        <div class="col-md-9">{{user.username}}</div>
+                        <div class="col-md-9">{{ user.username }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-3"><strong>Email:</strong></div>
-                        <div class="col-md-9">{{user.email}}</div>
+                        <div class="col-md-9">{{ user.email }}</div>
                     </div>
                     <div class="mt-4">
                         <a href="{% url 'edit_username' %}" class="btn btn-primary btn-sm me-2">Edit Username</a>
-                        <a href="{% url 'edit_email' %}" class="btn btn-primary btn-sm me-2">Edit Email</a>
+                        <a href="{% url 'edit_email' %}" class="btn btn-primary btn-sm">Edit Email</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Password management -->
+            <!-- Password Management -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Password</h4>
@@ -47,7 +61,7 @@
                 </div>
             </div>
 
-            <!-- Dete Account -->
+            <!-- Delete Account -->
             <div class="card border-danger">
                 <div class="card-body">
                     <h4 class="card-title mb-3 text-danger">Delete Account</h4>

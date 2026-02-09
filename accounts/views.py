@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm
+from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm, ProfilePictureForm
+from .models import Profile
 
 
 # Create your views here.
 
+# Registration page
 def register(request):
     # If user submits the registration form
     if request.method == 'POST':
@@ -17,6 +19,8 @@ def register(request):
         if form.is_valid():
             # Create new user in database and return user object
             user = form.save()
+            # Create a profile for the new user
+            Profile.objects.create(user=user)
             # Log new user in
             login(request, user)
             # Redirect them to the books home page books/
@@ -112,7 +116,27 @@ def delete_account(request):
 def account_deleted(request):
     return render(request, 'accounts/account_deleted.html')            
                 
-                
-                
+# Upload a profile picture
+@login_required
+def upload_profile_picture(request):
+    if request.method == 'POST':
+        # Fill form with file from the POST data and tell it which users profile to update
+        # instance= tells us to update the current instance instead of creating a new one
+        form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        
+    else:
+        form = ProfilePictureForm(instance=request.user.profile)
+    
+    context = {'form': form}
+    
+    return render(request, 'accounts/upload_profile_picture.html', context)
+        
+            
+    
+        
             
             

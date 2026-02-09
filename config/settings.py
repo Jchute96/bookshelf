@@ -128,6 +128,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Create media directory if it does not exist
+MEDIA_ROOT.mkdir(exist_ok=True)
+
 # Redirect to home books page when a user logs in
 # Redirect to login page when user logs out
 LOGIN_REDIRECT_URL = '/books/'
