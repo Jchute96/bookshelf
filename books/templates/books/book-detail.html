@@ -5,8 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="">
-                <!-- Go back to previous page in history if go back button is pressed -->
-                <button onclick="history.back()" class="my-3 btn btn-dark btn-sm">Go Back</button>
+                <!-- Go back to home page if go back button is pressed -->
+                <a href="{% url 'home' %}" class="my-3 btn btn-dark btn-sm">Go Back</a>
             </div>
             <div style="height: 90vh">
                 {% if book.image %}
@@ -16,8 +16,13 @@
                 {% endif %}
                 <h3 class="mt-3">{{ book.title }}</h3>
                 <h5 class="text-muted">Author: {{ book.author }}</h5>
+                <small><strong>Status:</strong> {{ book.get_status_display }}</small><br>
                 <small><strong>Genre:</strong> {{ book.get_genre_display }}</small><br>
-                <small><strong>Rating:</strong> {{ book.rating }}/5 ⭐</small><br>
+                {% if book.rating %}
+                    <small><strong>Rating:</strong> {{ book.rating }}/5 ⭐</small><br>
+                {% else %}
+                    <small><strong>Rating:</strong> Not rated yet</small><br>
+                {% endif %}
                 {% if book.date_finished %}
                     <small><strong>Date Finished:</strong> {{ book.date_finished|date:"F d, Y" }}</small><br>
                 {% endif %}

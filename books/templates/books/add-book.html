@@ -10,19 +10,30 @@
                 <form method="POST" enctype="multipart/form-data" action="">
                     <!-- this is for securing the form from malicious attacks -->
                     {% csrf_token %}
+                    <p class="text-muted"><small><span style="color: red;">*</span> Required fields</small></p>
                     <!-- this is the label and input for the Title -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Book Title</label>
-                        <input required type="text" name="title" class="form-control" placeholder="Enter Book Title">
+                        <label class="form-label font-weight-bold">Book Title <span style="color: red;">*</span></label>
+                        <input required type="text" name="title" class="form-control" placeholder="Enter Title">
                     </div>
                     <!-- this is the label and input for the Author -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Author</label>
-                        <input required type="text" name="author" class="form-control" placeholder="Book Author">
+                        <label class="form-label font-weight-bold">Author <span style="color: red;">*</span></label>
+                        <input required type="text" name="author" class="form-control" placeholder="Enter Author">
                     </div>
+                    <!-- This is the label and input options for the reading status -->
+                     <div class="mb-3">
+                        <label class="form-label font-weight-bold">Reading Status <span style="color: red;">*</span></label>
+                        <select required name="status" class="form-control">
+                            <option value="">Select Reading Status</option>
+                            <option value="currently_reading">Currently Reading</option>
+                            <option value="want_to_read">Want to Read</option>
+                            <option value="finished">Finished</option>
+                        </select>
+                     </div>
                     <!-- this is the label and input for the Genre -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Genre</label>
+                        <label class="form-label font-weight-bold">Genre <span style="color: red;">*</span></label>
                         <select required name="genre" class="form-control">
                             <option value="">Select Genre</option>
                             <option value="fiction">Fiction</option>
@@ -40,7 +51,7 @@
                     <!-- this is the label and input for the Rating -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Rating (1-5)</label>
-                        <input required type="number" name="rating" class="form-control" placeholder="Rating" min="1" max="5">
+                        <input type="number" name="rating" class="form-control" placeholder="Enter Rating" min="1" max="5">
                     </div>
                     <!-- this is the label and input for the Review -->
                     <div class="mb-3">
@@ -49,17 +60,17 @@
                     </div>
                     <!-- this is the label and input for the Date Finished -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Date Finished (Optional)</label>
+                        <label class="form-label font-weight-bold">Date Finished</label>
                         <input type="date" name="date_finished" class="form-control">
                     </div>
                     <!-- label and input for the purchase link -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Purchase Link (Optional)</label>
+                        <label class="form-label font-weight-bold">Purchase Link</label>
                         <input type="url" name="purchase_link" class="form-control" placeholder="https://example.com/book">
                     </div>
                     <!-- this is the label and input for the Image -->
                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Upload Image (Optional):</label>
+                        <label class="form-label font-weight-bold">Upload Image:</label>
                         <input type="file" name="image" class="form-control" id="customFile" />
                     </div>
                     <!-- Submit button -->

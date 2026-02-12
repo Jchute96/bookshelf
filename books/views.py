@@ -43,6 +43,12 @@ def home(request):
     # Filter by a certain year if selected by user
     if year:
         books = books.filter(date_finished__year=year)
+    
+    status = request.GET.get('status')
+    # Filter by a certain status if selected by user
+    if status:
+        books = books.filter(status=status)
+        
         
     sort = request.GET.get('sort')
     # Apply the specific sort selected by user if chosen
@@ -61,7 +67,7 @@ def home(request):
             books = books.order_by('date_finished')
             
     # Include these variables that will be used in the templates
-    context = {'books': books, 'years': years, 'genre': genre, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
+    context = {'books': books, 'years': years, 'genre': genre, 'status': status, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument
@@ -86,7 +92,8 @@ def add_book(request):
             title = data['title'],
             author = data['author'],
             genre = data['genre'],
-            rating = data['rating'],
+            status = data['status'],
+            rating = data.get('rating') or None,
             review = data['review'],
             purchase_link = purchase_link,
             date_finished = date_finished,
@@ -112,7 +119,9 @@ def edit_book(request, id):
         if form.is_valid():
             # Save data to database
             form.save()
-            return redirect('home')
+            # Redirect to the book detail page for the book just updated
+            return redirect('book-detail', id=book.id)
+        
     context = {'form': form}
     return render(request, 'books/update-book.html', context)
 
@@ -131,12 +140,12 @@ def delete_book(request, id):
 # Displays statistics
 @login_required
 def statistics(request):
-    #  Get all the books that belong to the current logged in user
-    books = Book.objects.filter(user=request.user)
+    #  Get all the finished books that belong to the current logged in user
+    books = Book.objects.filter(user=request.user).filter(status='finished')
     # Get the number of total books read
     total_books = books.count()
     
-    # Get the average rating of all books
+    # Get the average rating of all finished books
     avg_rating = books.aggregate(Avg('rating'))['rating__avg']
     
     # Verify that there were ratings to average and if not set it to 0

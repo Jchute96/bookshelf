@@ -44,6 +44,15 @@
                             <option value="history" {% if genre == "history" %}selected{% endif %}>History</option>
                             <option value="selfhelp" {% if genre == "selfhelp" %}selected{% endif %}>Self-Help</option>
                         </select>
+
+                        <!-- Status filter -->
+                         <label class="form-label font-weight-bold mt-3">Status</label>
+                         <select name="status" class="form-control">
+                            <option value="">All Statuses</option>
+                            <option value="currently_reading" {% if status == "currently_reading" %}selected{% endif %}>Currently Reading</option>
+                            <option value="want_to_read" {% if status == "want_to_read" %}selected{% endif %}>Want to Read</option>
+                            <option value="finished" {% if status == "finished" %}selected{% endif %}>Finished</option>
+                         </select>
                         <label class="form-label font-weight-bold mt-3">Rating</label>
                         <select name="rating" class="form-control">
                             <!-- Rating filter options. Display current selected filter if chosen by user -->

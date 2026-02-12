@@ -18,11 +18,18 @@ class Book(models.Model):
         ('selfhelp', 'Self-Help'),
     ]
     
+    STATUS_CHOICES = [
+        ('want_to_read', 'Want to Read'),
+        ('currently_reading', 'Currently Reading'),
+        ('finished', 'Finished'),
+    ]
+    
     # When user deletes profile delete all of the data associated with their foreign key
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='finished')
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True)
     review = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     genre = models.CharField(max_length=50, choices=GENRE_CHOICES)
@@ -38,6 +45,9 @@ class Book(models.Model):
         
     # Method that returns total stars filled/unfilled corresponding to the book rating
     def get_star_display(self):
+        if self.rating is None:
+            return ''
+        
         filled_stars = '⭐' * self.rating
         empty_stars = '☆' * (5 - self.rating)
         
