@@ -27,6 +27,7 @@ urlpatterns = [
     #  Direct any urls starting with /accounts/ to the custom accounts URLs
     path('accounts/', include('accounts.urls')),
     path('books/', include('books.urls')),
+    path('lists/', include('lists.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

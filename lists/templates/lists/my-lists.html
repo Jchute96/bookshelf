@@ -1,0 +1,140 @@
+{% extends 'books/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mb-4">
+    <div class="row">
+        <!-- side navbar here -->
+        <div class="col-md-3 mt-3">
+            <div class="card">
+                <h4 class="card-header px-3">Menu</h4>
+                <ul class="list-group list-group-light list-group-small">
+                    <li class="list-group-item px-3"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="list-group-item px-3"><a href="{% url 'statistics' %}">Statistics</a></li>
+                    <li class="list-group-item px-3"><a href="{% url 'profile' %}">Profile</a></li>
+                    <li class="list-group-item px-3"><a href="{% url 'my-lists' %}">My Lists</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 mt-3">
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">My Lists</h2>
+                <button class="btn btn-primary btn-sm">Create Custom List</button>
+            </div>
+
+            <div class="col-12 mt-5 mt-4">
+                <h4>Essential Lists</h4>
+                <hr class="my-4">
+            </div>
+        
+            <div class="row">
+                <!-- Finished Books List -->
+                <div class="col-md-4">
+                    <div class="card my-2" style="height: 550px;">
+                        <!-- Click the image to go to the list detail page -->
+                        <a href="#">
+                            <!-- This is the list image to display some covers of the books in the list -->
+                            <img src="/static/images/placeholder.png" class="card-img-top"
+                            style="width:100%; height:auto; max-height: 325px;"/>
+                        </a>
+                        <div class="card-body"
+                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 class="card-text"><strong>Finished</strong></h4>
+                                <p class="text-muted"><small>{{ finished_count }} book{{ finished_count|pluralize }}</small></p>
+                            </div>
+                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Currently Reading Books List -->
+                <div class="col-md-4">
+                    <div class="card my-2" style="height: 550px;">
+                        <!-- Click the image to go to the list detail page -->
+                        <a href="#">
+                            <!-- This is the list image to display some covers of the books in the list -->
+                            <img src="/static/images/placeholder.png" class="card-img-top"
+                            style="width:100%; height:auto; max-height: 325px;"/>
+                        </a>
+                        <div class="card-body"
+                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 class="card-text"><strong>Currently Reading</strong></h4>
+                                <p class="text-muted"><small>{{ currently_reading_count }} book{{ currently_reading_count|pluralize }}</small></p>
+                            </div>
+                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Want to Read Books List -->
+                <div class="col-md-4">
+                    <div class="card my-2" style="height: 550px;">
+                        <!-- Click the image to go to the list detail page -->
+                        <a href="#">
+                            <!-- This is the list image to display some covers of the books in the list -->
+                            <img src="/static/images/placeholder.png" class="card-img-top"
+                            style="width:100%; height:auto; max-height: 325px;"/>
+                        </a>
+                        <div class="card-body"
+                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 class="card-text"><strong>Want to Read</strong></h4>
+                                <p class="text-muted"><small>{{ want_to_read_count }} book{{ want_to_read_count|pluralize}}</small></p>
+                            </div>
+                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add this heading if user has custom lists -->
+                {% if lists %}
+                <div class="col-12 mt-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>My Custom Lists</h4>
+                        <button class="btn btn-outline-primary btn-sm">Create Custom List</button>
+                    </div>
+                    <hr class="my-4">
+                </div>
+                {% else %}
+                <div class="col-12 mt-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>My Custom Lists</h4>
+                        <button class="btn btn-primary btn-sm">Create New List</button>
+                    </div>
+                    <hr class="my-4">
+                    <div class="col-12">
+                        <p class="text-muted text-center">No custom lists yet. Create one to get started!</p>
+                    </div>
+                </div>
+                {% endif %}
+
+
+                <!-- Users Custom Book Lists -->
+                {% for list in lists %}
+                <div class="col-md-4">
+                    <div class="card my-2" style="height: 550px;">
+                        <!-- Click the image to go to the list detail page -->
+                        <a href="#">
+                            <!-- This is the list image to display some covers of the books in the list -->
+                            <img src="/static/images/placeholder.png" class="card-img-top"
+                            style="width:100%; height:auto; max-height: 325px;"/>
+                        </a>
+                        <div class="card-body"
+                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 class="card-text"><strong>{{ list.name }}</strong></h4>
+                                <p class="text-muted"><small>{{ list.books.count }} book{{ list.books.count|pluralize}}</small></p>
+                            </div>
+                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                        </div>
+                    </div>
+                 </div>
+                 {% endfor %}
+            </div>
+        </div>    
+    </div>
+</div>
+{% endblock %}
