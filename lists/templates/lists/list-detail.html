@@ -24,6 +24,7 @@
                 <div>
                     <!-- Send the list id to the add-books URL -->
                     <a href="{% url 'add-books' user_list.id %}" class="btn btn-primary btn-sm me-2">Add Books</a>
+                    <a href="{% url 'edit-list' user_list.id %}" class="btn btn-secondary btn-sm me-2">Edit List Name</a>
                     <!-- Send the list id to the remove-books URL -->
                     <a href="{% url 'remove-books' user_list.id %}" class="btn btn-danger btn-sm">Remove Books</a>
                 </div>

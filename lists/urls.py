@@ -8,5 +8,7 @@ urlpatterns = [
     path('my-lists/<int:list_id>/', views.list_detail, name='list-detail'),
     path('my-lists/<int:list_id>/add-books/', views.add_books, name='add-books'),
     path('my-lists/<int:list_id>/remove-books/', views.remove_books, name='remove-books'),
+    path('my-lists/<int:list_id>/edit/', views.edit_list, name='edit-list'),
+    
 ]
 

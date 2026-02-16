@@ -3,7 +3,7 @@ from django.http import response
 from .models import BookList
 from books.models import Book
 from django.contrib.auth.decorators import login_required
-from .forms import CreateListForm
+from .forms import CreateListForm, EditListForm
 
 # Create your views here.
 
@@ -144,8 +144,34 @@ def remove_books(request, list_id):
     return render(request, 'lists/remove-books.html', context)
     
             
-            
+
+@login_required
+def edit_list(request, list_id):
+    
+    # Get the list that will have its name changed
+    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    
+    # If user submits the edit form
+    if request.method == 'POST':
         
+        #  Create and fill customized form for this specific user list
+        form = EditListForm(request.POST, instance=user_list)
+        
+        # Verify the user entered data is valid
+        if form.is_valid():
+            
+            # Save the new list name
+            form.save()
+            
+            # Redirect to main lists page
+            return redirect('list-detail', list_id=list_id)
+    
+    # Display form
+    else:
+        form = EditListForm(instance=user_list)
+            
+    context = {'form': form, 'user_list': user_list}
+    return render(request, 'lists/edit-list.html', context)
         
         
         

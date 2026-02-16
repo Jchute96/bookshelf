@@ -14,3 +14,14 @@ class CreateListForm(ModelForm):
         widgets = {
              'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'List Name'}),
         }
+
+# Form to edit list name
+class EditListForm(ModelForm):
+    class Meta:
+        model = BookList
+        
+        fields = ['name']
+        
+        widgets = {
+             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'List Name'}),
+        }
