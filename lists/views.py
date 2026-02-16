@@ -3,6 +3,7 @@ from django.http import response
 from .models import BookList
 from books.models import Book
 from django.contrib.auth.decorators import login_required
+from .forms import CreateListForm
 
 # Create your views here.
 
@@ -27,6 +28,46 @@ def my_lists(request):
     context = {'lists': lists, 'finished_count': finished_count, 'currently_reading_count': currently_reading_count, 'want_to_read_count': want_to_read_count}
     
     return render(request, 'lists/my-lists.html', context)
+
+@login_required
+def create_list(request):
+    
+    # If user submits the registration form
+    if request.method == 'POST':
+        
+        #  Create and fill customized form with the user entered data
+        form = CreateListForm(request.POST)
+        
+        # Verify the user entered data is valid
+        if form.is_valid():
+            
+            # Since we used ModelForm for the form we can use form.save to save it
+            new_list = form.save(commit=False)
+            new_list.user = request.user
+            
+            # Save the new list after we got the user
+            new_list.save()
+            
+            # Redirect to main lists page
+            return redirect('my-lists')
+    
+    # Display form
+    else:
+        form = CreateListForm()
+            
+    context = {'form': form}
+        
+    return render(request, 'lists/create-list.html', context)
+        
+        
+            
+            
+            
+            
+
+        
+        
+    
     
     
     
