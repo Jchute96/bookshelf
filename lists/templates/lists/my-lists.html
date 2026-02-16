@@ -117,7 +117,7 @@
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
                         <!-- Click the image to go to the list detail page -->
-                        <a href="#">
+                        <a href="{% url 'list-detail' list.id %}">
                             <!-- This is the list image to display some covers of the books in the list -->
                             <img src="/static/images/placeholder.png" class="card-img-top"
                             style="width:100%; height:auto; max-height: 325px;"/>
@@ -128,7 +128,7 @@
                                 <h4 class="card-text"><strong>{{ list.name }}</strong></h4>
                                 <p class="text-muted"><small>{{ list.books.count }} book{{ list.books.count|pluralize}}</small></p>
                             </div>
-                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                            <a href="{% url 'list-detail' list.id %}" class="btn btn-outline-dark btn-sm">View List</a>
                         </div>
                     </div>
                  </div>

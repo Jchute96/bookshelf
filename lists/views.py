@@ -7,6 +7,7 @@ from .forms import CreateListForm
 
 # Create your views here.
 
+# Display all users lists
 @login_required
 def my_lists(request):
     
@@ -26,9 +27,9 @@ def my_lists(request):
     want_to_read_count = books.filter(status='want_to_read').count()
     
     context = {'lists': lists, 'finished_count': finished_count, 'currently_reading_count': currently_reading_count, 'want_to_read_count': want_to_read_count}
-    
     return render(request, 'lists/my-lists.html', context)
 
+# Create a list page
 @login_required
 def create_list(request):
     
@@ -56,10 +57,70 @@ def create_list(request):
         form = CreateListForm()
             
     context = {'form': form}
-        
     return render(request, 'lists/create-list.html', context)
+
+# List detail page
+@login_required
+def list_detail(request, list_id):
+    
+    # Get the user list that matches the list_id
+    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    
+    # Get all books from that list
+    books = user_list.books.all()
+    
+    context = {'user_list': user_list, 'books': books}      
+    return render(request, 'lists/list-detail.html', context)
+    
+      
+@login_required  
+def add_books(request, list_id):
+    
+    # Get the user list that matches the list_id
+    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    
+    if request.method == 'POST':
+        
+        # Get the list of book ids from the form the user submitted
+        selected_books = request.POST.getlist('book_ids')
+        
+        # Iterate through the book ids selected to add by the user
+        for book in selected_books:
+            # Get the book that matches the primary key taken from book_ids
+            book_to_add = Book.objects.get(pk=book, user=request.user)
+            
+            # Add the book to the users list
+            user_list.books.add(book_to_add)
+    
+        # Redirect to list detail page
+        return redirect('list-detail', list_id=list_id)
+    
+    else:
+        
+        # Get all available books that belong to current user and are not already in list
+        # Use exclude to remove books whose ID is in the list
+        books = Book.objects.filter(user=request.user).exclude(id__in=user_list.books.all())
+        
+        # Sort the title in ascending order
+        books = books.order_by('title')
         
         
+    context = {'books': books, 'user_list': user_list}
+    return render(request, 'lists/add-books.html', context)
+            
+            
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          
             
             
             

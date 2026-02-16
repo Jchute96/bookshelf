@@ -74,7 +74,7 @@ def home(request):
 @login_required
 def book_detail(request, id):
     # Query a book by its id
-    book = Book.objects.get(pk=id)
+    book = Book.objects.get(pk=id, user=request.user)
     context = {'book': book}
     return render(request, 'books/book-detail.html', context)
 
