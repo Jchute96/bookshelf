@@ -174,7 +174,22 @@ def edit_list(request, list_id):
     return render(request, 'lists/edit-list.html', context)
         
         
-        
+@login_required
+def delete_list(request, list_id):
+    
+    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    
+    if request.method == 'POST':
+        user_list.delete()
+        return redirect('my-lists')
+    
+    context = {'user_list': user_list}
+    return render(request, 'lists/delete-list.html', context)
+
+
+    
+    
+      
         
         
         

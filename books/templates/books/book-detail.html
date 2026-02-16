@@ -5,8 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="">
-                <!-- Go back to last page if go back button is pressed -->
-                <button onclick="history.back()" class="my-3 btn btn-dark btn-sm">Go Back</button>
+                <!-- Go back to home page if go back button is pressed -->
+                <a href="{% url 'home' %}" class="my-3 btn btn-dark btn-sm">Go Back</a>
             </div>
             <div style="height: 90vh">
                 {% if book.image %}

@@ -6,16 +6,16 @@
         <div class="col-md-6">
             <div class="card border-danger shadow-lg">
                 <div class="card-body">
-                    <h2 class="text-center text-danger mb-4">⚠️ Delete Book</h2>
+                    <h2 class="text-center text-danger mb-4">⚠️ Delete List</h2>
                     
                     <p class="text-center">
-                        Are you sure you want to delete <strong>"{{ book.title }}"</strong> by {{ book.author }}?
+                        Are you sure you want to delete the list <strong>"{{ user_list.name }}"</strong>?
                     </p>
                     
                     <form method="POST">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger w-100">Yes, Delete This Book</button>
-                        <a href="{% url 'book-detail' book.id %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                        <button type="submit" class="btn btn-danger w-100">Yes, Delete This List</button>
+                        <a href="{% url 'list-detail' user_list.id %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
                     </form>
                 </div>
             </div>
