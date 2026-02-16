@@ -21,8 +21,12 @@
         <div class="col-md-9 mt-3">
             <div class="mb-3 d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">{{ user_list.name }}</h2>
-                <!-- Send the list id to the add-books URL -->
-                <a href="{% url 'add-books' user_list.id %}" class="btn btn-primary btn-sm">Add Books</a>
+                <div>
+                    <!-- Send the list id to the add-books URL -->
+                    <a href="{% url 'add-books' user_list.id %}" class="btn btn-primary btn-sm me-2">Add Books</a>
+                    <!-- Send the list id to the remove-books URL -->
+                    <a href="{% url 'remove-books' user_list.id %}" class="btn btn-danger btn-sm">Remove Books</a>
+                </div>
             </div>
             <hr class="my-4">
 

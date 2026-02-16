@@ -107,6 +107,42 @@ def add_books(request, list_id):
         
     context = {'books': books, 'user_list': user_list}
     return render(request, 'lists/add-books.html', context)
+
+
+@login_required
+def remove_books(request, list_id):
+    
+    # Get the user list that matches the list_id
+    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    
+    if request.method == 'POST':
+        
+        # Get the list of book ids from the form the user submitted
+        selected_books = request.POST.getlist('book_ids')
+        
+        # Iterate through the book ids selected to remove by the user
+        for book in selected_books:
+            # Get the book that matches the primary key taken from book_ids
+            book_to_remove = Book.objects.get(pk=book, user=request.user)
+            
+            # Remove the book from the users list
+            user_list.books.remove(book_to_remove)
+    
+        # Redirect to list detail page
+        return redirect('list-detail', list_id=list_id)
+    
+    else:
+        
+        # Get all current books that are in the users list
+        books = user_list.books.all()
+        
+        # Sort the title in ascending order
+        books = books.order_by('title')
+        
+        
+    context = {'books': books, 'user_list': user_list}
+    return render(request, 'lists/remove-books.html', context)
+    
             
             
         
