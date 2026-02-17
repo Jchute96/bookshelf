@@ -21,6 +21,19 @@
         <div class="col-md-9 mt-3">
             <div class="mb-3 d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">{{ list_name }}</h2>
+                <div>
+                    <!-- Export buttons -->
+                    {% if status == 'finished' %}
+                        <a href="{% url 'export-finished' 'csv' %}" class="btn btn-success btn-sm me-2">Export CSV</a>
+                        <a href="{% url 'export-finished' 'pdf' %}" class="btn btn-info btn-sm">Export PDF</a>
+                    {% elif status == 'currently_reading' %}
+                        <a href="{% url 'export-currently-reading' 'csv' %}" class="btn btn-success btn-sm me-2">Export CSV</a>
+                        <a href="{% url 'export-currently-reading' 'pdf' %}" class="btn btn-info btn-sm">Export PDF</a>
+                    {% elif status == 'want_to_read' %}
+                        <a href="{% url 'export-want-to-read' 'csv' %}" class="btn btn-success btn-sm me-2">Export CSV</a>
+                        <a href="{% url 'export-want-to-read' 'pdf' %}" class="btn btn-info btn-sm">Export PDF</a>
+                    {% endif %}
+                </div>
             </div>
             <hr class="my-4">
 

@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import response
+from django.http import response, HttpResponse
 from .models import BookList
 from books.models import Book
 from django.contrib.auth.decorators import login_required
 from .forms import CreateListForm, EditListForm
+import csv
 
 # Create your views here.
 
@@ -219,9 +220,91 @@ def essential_list(request, status):
     
     books = books.order_by('title')
     
-    context = {'books': books, 'list_name': list_name}
+    context = {'books': books, 'list_name': list_name, 'status': status}
     
     return render(request, 'lists/essential-list.html', context)
+
+# Create view that takes format parameter as well as list_id and status as optional parameters
+@login_required
+def export_list(request, format, list_id=None, status=None):
+    
+    # If user is trying to export a custom list
+    if list_id:
+        
+        # Get the current user list
+        user_list = BookList.objects.get(pk=list_id, user = request.user)
+        
+        # Get all the books from that list
+        books = user_list.books.all()
+        
+        # Order the books in alphabetical order
+        books = books.order_by('title')
+        
+        # Get list name for the filename
+        list_name = user_list.name
+    
+    # If user is trying to export a essential list
+    else:
+        # Get all books for the user filtered by the status value
+        books = Book.objects.filter(status=status, user=request.user)
+        
+        # Order the books in alhabetical order
+        books = books.order_by('title')
+        
+        status_names = {
+            'finished': 'Finished',
+            'currently_reading': 'Currently Reading',
+            'want_to_read': 'Want to Read'
+        }
+        
+        # Assign the list name the value of the status for the filename
+        list_name = status_names[status]
+           
+    if format == 'csv':
+        # Create a CSV response
+        response = HttpResponse(content_type='text/csv')
+        
+        # Create a file name by replacing spaces with underscores and making it lowercase
+        filename = list_name.replace(' ', '_').lower() + '.csv'
+        
+        # Tell browser to download file with the filename
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        # Create a CSV writer to write to the response
+        writer = csv.writer(response)
+        
+        # Write header row for the column names
+        writer.writerow(['Title', 'Author', 'Genre', 'Rating', 'Review', 'Purchase Link'])
+        
+        # Fill out each following row with the info from each book
+        for book in books:
+            writer.writerow([
+                book.title,
+                book.author,
+                # Display the Display names for genre
+                book.get_genre_display(),
+                f"{book.rating}/5" if book.rating else '',
+                book.review or '',
+                book.purchase_link or '',
+            ])
+        
+        # Return the HttpResponse that tells the browser to download the newly created csv file
+        return response
+        
+    elif format == 'pdf':
+        pass
+        
+    else:
+        return HttpResponse("Invalid format. Use 'csv' or 'pdf'.", status=400)
+        
+        
+        
+        
+        
+        
+        
+        
+    
     
     
     
