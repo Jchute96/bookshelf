@@ -4,6 +4,8 @@ from .models import BookList
 from books.models import Book
 from django.contrib.auth.decorators import login_required
 from .forms import CreateListForm, EditListForm
+from django.template.loader import render_to_string
+from weasyprint import HTML
 import csv
 
 # Create your views here.
@@ -292,13 +294,28 @@ def export_list(request, format, list_id=None, status=None):
         return response
         
     elif format == 'pdf':
-        pass
+        # Create a file name by replacing spaces with underscores and making it lowercase
+        filename = list_name.replace(' ', '_').lower() + '.pdf'
+        
+        # Render the export-pdf HTML template with its context as a string
+        export_HTML_string = render_to_string('lists/export-pdf.html', {'books': books, 'list_name': list_name})
+        
+        
+        # Use WeasyPrints HTML to create an HTML object from the HTML string which acts as a blueprint
+        html = HTML(string=export_HTML_string)
+        # Convert the HTML object to PDF format and convert it to bytes using WeasyPrints .write_pdf method
+        pdf = html.write_pdf()
+        
+        # Create a pdf response with the pdf data
+        response = HttpResponse(pdf, content_type='application/pdf')
+        # Tell browser to download file with the filename
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        # Return the HttpResponse that tells the browser to download the newly created pdf file
+        return response    
         
     else:
         return HttpResponse("Invalid format. Use 'csv' or 'pdf'.", status=400)
-        
-        
-        
         
         
         

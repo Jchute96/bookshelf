@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ list_name }}</title>
+    <style>
+        /* Page setup */
+        @page {
+            size: letter;
+            margin: 1in;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Title styling */
+        h1 {
+            text-align: center;
+            color: #000000;
+            border-bottom: 3px solid #000000;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Book card styling */
+        .book {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .book-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+        
+        .book-author {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .book-meta {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .book-review {
+            font-size: 14px;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #000000;
+        }
+        
+        .book-link {
+            font-size: 12px;
+            color: #0066cc;
+            word-wrap: break-word;
+        }
+        
+        .divider {
+            border-bottom: 1px solid #ddd;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ list_name }}</h1>
+    
+    {% for book in books %}
+    <div class="book">
+        <div class="book-title">📚 {{ book.title }}</div>
+        <div class="book-author">by {{ book.author }}</div>
+        
+        <div class="book-meta">
+            <strong>Genre:</strong> {{ book.get_genre_display }}  |  
+            <strong>Rating:</strong> {{ book.get_star_display }} 
+            {% if book.rating %}({{ book.rating }}/5){% endif %}
+        </div>
+        
+        {% if book.review %}
+        <div class="book-review">
+            {{ book.review }}
+        </div>
+        {% endif %}
+        
+        <!-- Make sure links use https-->
+        {% if book.purchase_link and book.purchase_link|slice:":8" == "https://" %}
+        <div class="book-link">
+            <strong>Purchase:</strong> <a href="{{ book.purchase_link }}">Check it out here</a>
+        </div>
+        {% endif %}
+        
+        <div class="divider"></div>
+    </div>
+    {% endfor %}
+</body>
+</html>
