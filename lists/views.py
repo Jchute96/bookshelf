@@ -187,6 +187,25 @@ def delete_list(request, list_id):
     return render(request, 'lists/delete-list.html', context)
 
 
+@login_required
+def essential_list(request, status):
+    
+    books = Book.objects.filter(status=status, user=request.user)
+    
+    status_names = {
+        'finished': 'Finished',
+        'currently_reading': 'Currently Reading',
+        'want_to_read': 'Want to Read'
+    }
+    
+    # Assign the list name the value of the status depending on what the user clicks
+    list_name = status_names[status]
+    
+    books = books.order_by('title')
+    
+    context = {'books': books, 'list_name': list_name}
+    return render(request, 'lists/essential-list.html', context)
+    
     
     
       

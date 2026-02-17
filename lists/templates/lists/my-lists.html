@@ -32,7 +32,7 @@
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
                         <!-- Click the image to go to the list detail page -->
-                        <a href="#">
+                        <a href="{% url 'finished-list' %}">
                             <!-- This is the list image to display some covers of the books in the list -->
                             <img src="/static/images/placeholder.png" class="card-img-top"
                             style="width:100%; height:auto; max-height: 325px;"/>
@@ -43,7 +43,7 @@
                                 <h4 class="card-text"><strong>Finished</strong></h4>
                                 <p class="text-muted"><small>{{ finished_count }} book{{ finished_count|pluralize }}</small></p>
                             </div>
-                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                            <a href="{% url 'finished-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
                         <!-- Click the image to go to the list detail page -->
-                        <a href="#">
+                        <a href="{% url 'currently-reading-list' %}">
                             <!-- This is the list image to display some covers of the books in the list -->
                             <img src="/static/images/placeholder.png" class="card-img-top"
                             style="width:100%; height:auto; max-height: 325px;"/>
@@ -63,7 +63,7 @@
                                 <h4 class="card-text"><strong>Currently Reading</strong></h4>
                                 <p class="text-muted"><small>{{ currently_reading_count }} book{{ currently_reading_count|pluralize }}</small></p>
                             </div>
-                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                            <a href="{% url 'currently-reading-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
                         <!-- Click the image to go to the list detail page -->
-                        <a href="#">
+                        <a href="{% url 'want-to-read-list' %}">
                             <!-- This is the list image to display some covers of the books in the list -->
                             <img src="/static/images/placeholder.png" class="card-img-top"
                             style="width:100%; height:auto; max-height: 325px;"/>
@@ -84,7 +84,7 @@
                                 <h4 class="card-text"><strong>Want to Read</strong></h4>
                                 <p class="text-muted"><small>{{ want_to_read_count }} book{{ want_to_read_count|pluralize}}</small></p>
                             </div>
-                            <a href="#" class="btn btn-outline-dark btn-sm">View List</a>
+                            <a href="{% url 'want-to-read-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
                         </div>
                     </div>
                 </div>

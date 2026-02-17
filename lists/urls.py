@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     path('my-lists/', views.my_lists, name='my-lists'),
     path('create-list/', views.create_list, name='create-list'),
+    path('my-lists/finished/', views.essential_list, {'status': 'finished'}, name='finished-list'),
+    path('my-lists/currently-reading/', views.essential_list, {'status': 'currently_reading'}, name='currently-reading-list'),
+    path('my-lists/want-to-read/', views.essential_list, {'status': 'want_to_read'}, name='want-to-read-list'),
     # Passes number from URL to view as a parameter
     path('my-lists/<int:list_id>/', views.list_detail, name='list-detail'),
     path('my-lists/<int:list_id>/add-books/', views.add_books, name='add-books'),
