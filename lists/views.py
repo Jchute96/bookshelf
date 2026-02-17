@@ -26,7 +26,23 @@ def my_lists(request):
     # Get number of users want to read books
     want_to_read_count = books.filter(status='want_to_read').count()
     
-    context = {'lists': lists, 'finished_count': finished_count, 'currently_reading_count': currently_reading_count, 'want_to_read_count': want_to_read_count}
+    # Get the books to use for the list images
+    finished_books = books.filter(status='finished')[:4]
+    currently_reading_books = books.filter(status='currently_reading')[:4]
+    want_to_read_books = books.filter(status='want_to_read')[:4]
+    
+    
+    
+    context = {
+        'lists': lists, 
+        'finished_count': finished_count, 
+        'currently_reading_count': currently_reading_count, 
+        'want_to_read_count': want_to_read_count,
+        'finished_books': finished_books,
+        'currently_reading_books': currently_reading_books,
+        'want_to_read_books': want_to_read_books
+    }
+    
     return render(request, 'lists/my-lists.html', context)
 
 # Create a list page
@@ -204,6 +220,7 @@ def essential_list(request, status):
     books = books.order_by('title')
     
     context = {'books': books, 'list_name': list_name}
+    
     return render(request, 'lists/essential-list.html', context)
     
     

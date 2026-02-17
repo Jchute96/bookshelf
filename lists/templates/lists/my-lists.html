@@ -26,19 +26,53 @@
                 <h4>Essential Lists</h4>
                 <hr class="my-4">
             </div>
-        
+
             <div class="row">
                 <!-- Finished Books List -->
                 <div class="col-md-4">
-                    <div class="card my-2" style="height: 550px;">
-                        <!-- Click the image to go to the list detail page -->
-                        <a href="{% url 'finished-list' %}">
-                            <!-- This is the list image to display some covers of the books in the list -->
-                            <img src="/static/images/placeholder.png" class="card-img-top"
-                            style="width:100%; height:auto; max-height: 325px;"/>
+                    <div class="card my-2" style="height: 500px;">
+                        <a href="{% url 'finished-list' %}" style="display: block; height: 380px; overflow: hidden;">
+                            {% with book_count=finished_count %}
+                                {% if book_count == 0 %}
+                                    <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+
+                                <!-- If there is only 1 book display a single book cover -->
+                                {% elif book_count == 1 %}
+                                    {% if finished_books.first.image %}
+                                        <img src="{{ finished_books.first.image.url }}" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="/static/images/placeholder.png" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% endif %}
+                                
+                                <!-- Display two book covers if there are 2 or 3 books entered in a list -->
+                                {% elif book_count == 2 or book_count == 3 %}
+                                    <div style="height: 380px; display: flex; gap: 2px;">
+                                        {% for book in finished_books|slice:":2" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                
+                                <!-- Show 2x2 of book covers if there are 4 or more books -->
+                                {% else %}
+                                    <div style="height: 380px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;">
+                                        {% for book in finished_books|slice:":4" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% endwith %}
                         </a>
                         <div class="card-body"
-                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <h4 class="card-text"><strong>Finished</strong></h4>
                                 <p class="text-muted"><small>{{ finished_count }} book{{ finished_count|pluralize }}</small></p>
@@ -50,36 +84,107 @@
 
                 <!-- Currently Reading Books List -->
                 <div class="col-md-4">
-                    <div class="card my-2" style="height: 550px;">
-                        <!-- Click the image to go to the list detail page -->
-                        <a href="{% url 'currently-reading-list' %}">
-                            <!-- This is the list image to display some covers of the books in the list -->
-                            <img src="/static/images/placeholder.png" class="card-img-top"
-                            style="width:100%; height:auto; max-height: 325px;"/>
-                        </a>
+                    <div class="card my-2" style="height: 500px;">
+                        <a href="{% url 'currently-reading-list' %}"
+                            style="display: block; height: 380px; overflow: hidden;">
+                            {% with book_count=currently_reading_count %}
+                                {% if book_count == 0 %}
+                                    <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+
+                                <!-- If there is only 1 book display a single book cover -->
+                                {% elif book_count == 1 %}
+                                    {% if currently_reading_books.first.image %}
+                                        <img src="{{ currently_reading_books.first.image.url }}" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="/static/images/placeholder.png" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% endif %}
+                                
+                                <!-- Display two book covers if there are 2 or 3 books entered in a list -->
+                                {% elif book_count == 2 or book_count == 3 %}
+                                    <div style="height: 380px; display: flex; gap: 2px;">
+                                        {% for book in currently_reading_books|slice:":2" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                
+                                <!-- Show 2x2 of book covers if there are 4 or more books -->
+                                {% else %}
+                                    <div style="height: 380px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;">
+                                        {% for book in currently_reading_books|slice:":4" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% endwith %}
+                        </a>   
                         <div class="card-body"
-                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <h4 class="card-text"><strong>Currently Reading</strong></h4>
                                 <p class="text-muted"><small>{{ currently_reading_count }} book{{ currently_reading_count|pluralize }}</small></p>
                             </div>
-                            <a href="{% url 'currently-reading-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
+                            <a href="{% url 'currently-reading-list' %}" class="btn btn-outline-dark btn-sm">View
+                                List</a>
                         </div>
                     </div>
                 </div>
 
-
                 <!-- Want to Read Books List -->
                 <div class="col-md-4">
-                    <div class="card my-2" style="height: 550px;">
-                        <!-- Click the image to go to the list detail page -->
-                        <a href="{% url 'want-to-read-list' %}">
-                            <!-- This is the list image to display some covers of the books in the list -->
-                            <img src="/static/images/placeholder.png" class="card-img-top"
-                            style="width:100%; height:auto; max-height: 325px;"/>
+                    <div class="card my-2" style="height: 500px;">
+                        <a href="{% url 'want-to-read-list' %}"
+                            style="display: block; height: 380px; overflow: hidden;">
+
+                            {% with book_count=want_to_read_count %}
+                                {% if book_count == 0 %}
+                                    <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+
+                                <!-- If there is only 1 book display a single book cover -->
+                                {% elif book_count == 1 %}
+                                    {% if want_to_read_books.first.image %}
+                                        <img src="{{ want_to_read_books.first.image.url }}" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="/static/images/placeholder.png" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% endif %}
+                                
+                                <!-- Display two book covers if there are 2 or 3 books entered in a list -->
+                                {% elif book_count == 2 or book_count == 3 %}
+                                    <div style="height: 380px; display: flex; gap: 2px;">
+                                        {% for book in want_to_read_books|slice:":2" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                
+                                <!-- Show 2x2 of book covers if there are 4 or more books -->
+                                {% else %}
+                                    <div style="height: 380px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;">
+                                        {% for book in want_to_read_books|slice:":4" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% endwith %}
                         </a>
                         <div class="card-body"
-                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <h4 class="card-text"><strong>Want to Read</strong></h4>
                                 <p class="text-muted"><small>{{ want_to_read_count }} book{{ want_to_read_count|pluralize}}</small></p>
@@ -111,19 +216,56 @@
                 </div>
                 {% endif %}
 
-
                 <!-- Users Custom Book Lists -->
                 {% for list in lists %}
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
-                        <!-- Click the image to go to the list detail page -->
-                        <a href="{% url 'list-detail' list.id %}">
-                            <!-- This is the list image to display some covers of the books in the list -->
-                            <img src="/static/images/placeholder.png" class="card-img-top"
-                            style="width:100%; height:auto; max-height: 325px;"/>
+                        <a href="{% url 'list-detail' list.id %}"
+                            style="display: block; height: 380px; overflow: hidden;">
+                            {% with book_count=list.books.count %}
+
+                                <!-- Show the placeholder image if there are no books -->
+                                {% if book_count == 0 %}
+                                    <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+
+                                <!-- If there is only 1 book display a single book cover -->
+                                {% elif book_count == 1 %}
+                                    {% if list.books.first.image %}
+                                        <img src="{{ list.books.first.image.url }}" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="/static/images/placeholder.png" style="width: 100%; height: 380px; object-fit: cover;">
+                                    {% endif %}
+                                
+                                <!-- Display two book covers if there are 2 or 3 books entered in a list -->
+                                {% elif book_count == 2 or book_count == 3 %}
+                                    <div style="height: 380px; display: flex; gap: 2px;">
+                                        {% for book in list.books.all|slice:":2" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: calc(50% - 1px); height: 100%; object-fit: cover; flex-shrink: 0;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                
+                                <!-- Show 2x2 of book covers if there are 4 or more books -->
+                                {% else %}
+                                    <div style="height: 380px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px;">
+                                        {% for book in list.books.all|slice:":4" %}
+                                            {% if book.image %}
+                                                <img src="{{ book.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% else %}
+                                                <img src="/static/images/placeholder.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% endwith %}
                         </a>
+
                         <div class="card-body"
-                        style="display: flex; flex-direction: column; justify-content: space-between;">
+                            style="display: flex; flex-direction: column; justify-content: space-between;">
                             <div>
                                 <h4 class="card-text"><strong>{{ list.name }}</strong></h4>
                                 <p class="text-muted"><small>{{ list.books.count }} book{{ list.books.count|pluralize}}</small></p>
@@ -131,10 +273,10 @@
                             <a href="{% url 'list-detail' list.id %}" class="btn btn-outline-dark btn-sm">View List</a>
                         </div>
                     </div>
-                 </div>
-                 {% endfor %}
+                </div>
+                {% endfor %}
             </div>
-        </div>    
+        </div>
     </div>
 </div>
 {% endblock %}

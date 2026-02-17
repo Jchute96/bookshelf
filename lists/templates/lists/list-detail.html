@@ -24,7 +24,7 @@
                 <div>
                     <!-- Send the list id to the add-books URL -->
                     <a href="{% url 'add-books' user_list.id %}" class="btn btn-primary btn-sm me-2">Add Books</a>
-                    <a href="{% url 'edit-list' user_list.id %}" class="btn btn-secondary btn-sm me-2">Edit List Name</a>
+                    <a href="{% url 'edit-list' user_list.id %}" class="btn btn-secondary btn-sm me-2">Edit Name</a>
                     <!-- Send the list id to the remove-books URL -->
                     <a href="{% url 'remove-books' user_list.id %}" class="btn btn-danger btn-sm me-2">Remove Books</a>
                     <!-- Send the list id to the delete-list URL -->
@@ -69,7 +69,7 @@
             <div class="col-12">
                 <div class="alert alert-info text-center" role="alert">
                     <h5>No books yet in this list</h5>
-                    <p>Try adding a book to your list. <a href="#">Add book</a></p>
+                    <p>Try adding a book to your list. <a href="{% url 'add-books' user_list.id %}">Add book</a></p>
                 </div>
             </div>
             {% endfor %}
