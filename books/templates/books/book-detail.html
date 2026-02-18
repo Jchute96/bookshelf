@@ -2,41 +2,50 @@
 {% load static %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="">
-                <!-- Go back to home page if go back button is pressed -->
-                <a href="{% url 'home' %}" class="my-3 btn btn-dark btn-sm">Go Back</a>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Left column for the book cover image -->
+        <div class="col-md-5">
+            <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm mb-3">Go Back</a>
+            <!-- Display book cover if there is an image -->
+            {% if book.image %}
+                <img class="img-fluid rounded" style="max-height: 600px; width: 100%; object-fit: contain;" src="{{ book.image.url }}" alt="{{ book.title }}">
+            <!-- If no book cover display the placeholder -->
+            {% else %}
+                <img class="img-fluid rounded" style="max-height: 600px; width: 100%; object-fit: contain;" src="/static/images/placeholder.png" alt="No image available">
+            {% endif %}
+        </div>
+
+        <!-- Right column is for the book details-->
+        <div class="col-md-7 mt-5">
+
+            <h2>{{ book.title }}</h2>
+            <h5 class="text-muted mb-3">by {{ book.author }}</h5>
+            
+            <p><strong>Status:</strong> {{ book.get_status_display }}</p>
+            <p><strong>Genre:</strong> {{ book.get_genre_display }}</p>
+            {% if book.rating %}
+                <p><strong>Rating:</strong> {{ book.rating }}/5 ⭐</p>
+            {% else %}
+                <p><strong>Rating:</strong> Not rated yet</p>
+            {% endif %}
+            {% if book.date_finished %}
+                <p><strong>Date Finished:</strong> {{ book.date_finished|date:"F d, Y" }}</p>
+            {% endif %}
+            
+            <div class="mt-3">
+                <strong>Review:</strong>
+                <p>{{ book.review }}</p>
             </div>
-            <div style="height: 90vh">
-                {% if book.image %}
-                    <img class="img-fluid text-center" style="max-width: 100%; max-height: 100%; object-fit: contain;" src="{{ book.image.url }}" alt="{{ book.title }}">
-                {% else %}
-                    <img class="img-fluid text-center" style="max-width: 100%; max-height: 100%;" src="/static/images/placeholder.png" alt="No image available">
-                {% endif %}
-                <h3 class="mt-3">{{ book.title }}</h3>
-                <h5 class="text-muted">Author: {{ book.author }}</h5>
-                <small><strong>Status:</strong> {{ book.get_status_display }}</small><br>
-                <small><strong>Genre:</strong> {{ book.get_genre_display }}</small><br>
-                {% if book.rating %}
-                    <small><strong>Rating:</strong> {{ book.rating }}/5 ⭐</small><br>
-                {% else %}
-                    <small><strong>Rating:</strong> Not rated yet</small><br>
-                {% endif %}
-                {% if book.date_finished %}
-                    <small><strong>Date Finished:</strong> {{ book.date_finished|date:"F d, Y" }}</small><br>
-                {% endif %}
-                <div class="mt-3">
-                    <strong>Review:</strong>
-                    <p>{{ book.review }}</p>
-                </div>
+            
+            <div class="mt-3">
                 {% if book.purchase_link %}
                     <a target="_blank" rel="noopener noreferrer" href="{{ book.purchase_link }}" class="btn btn-primary btn-sm">Purchase Book</a>
                 {% endif %}
-                <a href="{% url 'edit-book' book.id %}" class="btn btn-success btn-sm">Edit Book</a>
+                <a href="{% url 'edit-book' book.id %}" class="btn btn-secondary btn-sm">Edit Book</a>
                 <a href="{% url 'delete-book' book.id %}" class="btn btn-danger btn-sm">Delete Book</a>
-
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

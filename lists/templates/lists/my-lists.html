@@ -66,7 +66,7 @@
                         <h4 class="card-text"><strong>Finished</strong></h4>
                         <p class="text-muted"><small>{{ finished_count }} book{{ finished_count|pluralize }}</small></p>
                     </div>
-                    <a href="{% url 'finished-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
+                    <a href="{% url 'finished-list' %}" class="btn btn-outline-primary btn-sm">View List</a>
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@
                         <h4 class="card-text"><strong>Currently Reading</strong></h4>
                         <p class="text-muted"><small>{{ currently_reading_count }} book{{ currently_reading_count|pluralize }}</small></p>
                     </div>
-                    <a href="{% url 'currently-reading-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
+                    <a href="{% url 'currently-reading-list' %}" class="btn btn-outline-primary btn-sm">View List</a>
                 </div>
             </div>
         </div>
@@ -176,7 +176,7 @@
                         <h4 class="card-text"><strong>Want to Read</strong></h4>
                         <p class="text-muted"><small>{{ want_to_read_count }} book{{ want_to_read_count|pluralize}}</small></p>
                     </div>
-                    <a href="{% url 'want-to-read-list' %}" class="btn btn-outline-dark btn-sm">View List</a>
+                    <a href="{% url 'want-to-read-list' %}" class="btn btn-outline-primary btn-sm">View List</a>
                 </div>
             </div>
         </div>
@@ -186,7 +186,7 @@
     <div class="mt-5">
         {% if lists %}
             <div class="mb-3">
-                <h4>My Custom Lists</h4>
+                <h4>Custom Lists</h4>
                 <hr class="my-3">
             </div>
         {% else %}
@@ -252,7 +252,7 @@
                             <h4 class="card-text"><strong>{{ list.name }}</strong></h4>
                             <p class="text-muted"><small>{{ list.books.count }} book{{ list.books.count|pluralize}}</small></p>
                         </div>
-                        <a href="{% url 'list-detail' list.id %}" class="btn btn-outline-dark btn-sm">View List</a>
+                        <a href="{% url 'list-detail' list.id %}" class="btn btn-outline-primary btn-sm">View List</a>
                     </div>
                 </div>
             </div>
