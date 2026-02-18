@@ -212,9 +212,11 @@
                             <!-- If there is only 1 book display a single book cover -->
                             {% elif book_count == 1 %}
                                 {% if list.books.first.image %}
-                                    <img src="{{ list.books.first.image.url }}" style="width: 100%; height: 380px; object-fit: cover;">
+                                <img src="{{ list.books.first.image.url }}"
+                                    style="width: 100%; height: 380px; object-fit: contain; background-color: #f8f9fa;">
                                 {% else %}
-                                    <img src="/static/images/placeholder.png" style="width: 100%; height: 380px; object-fit: cover;">
+                                <img src="/static/images/placeholder.png"
+                                    style="width: 100%; height: 380px; object-fit: contain; background-color: #f8f9fa;">
                                 {% endif %}
                             
                             <!-- Display two book covers if there are 2 or 3 books entered in a list -->
