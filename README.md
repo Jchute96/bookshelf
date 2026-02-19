@@ -80,20 +80,6 @@ python manage.py migrate
 
 # Start development server
 python manage.py runserver
-```
-
-
-
-## Project Structure
-```
-bookshelf/
-├── books/          # Core book management app
-├── accounts/       # User authentication and profiles
-├── lists/          # Custom and essential book lists
-├── config/         # Django project settings and URLs
-├── static/         # Static files (images, CSS)
-└── templates/      # HTML templates
-```
 
 ## Credits 
 
