@@ -3,25 +3,26 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container">
-    <!-- Create a container and center the columns for our form -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-5">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h2 class="text-center mb-4">Create a BookShelf Account</h2>
 
-                    <form method="POST">
-                        <!-- Generates a token to verify form submission is legit-->
-                        {% csrf_token %}
-                        <!-- Pipe the form through crispy forms to make it look nice-->
-                        {{ form|crispy }}
-                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                    </form>
+<!-- Make the screen have a navy background with the register card centered -->
+<div style="min-height: 100vh; background-color: #1B2A4A; display: flex; align-items: center; justify-content: center;">
+    <div class="col-md-4">
+        <!-- Add a card with a shadowing effect -->
+        <div class="card shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-1">📚 BookShelf</h2>
+                <p class="text-center small text-muted mb-4">Create an account and start tracking your reading journey.</p>
+
+                <form method="POST">
+                    <!-- Generates a token to verify form submission is legit-->
+                    {% csrf_token %}
+                    <!-- Pipe the form through crispy forms to make it look nice-->
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
                     <div class="text-center mt-3">
-                        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                        <a href="{% url 'login' %}">Already have an account? Sign In</a>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
