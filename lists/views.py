@@ -4,8 +4,12 @@ from .models import BookList
 from books.models import Book
 from django.contrib.auth.decorators import login_required
 from .forms import CreateListForm, EditListForm
-from django.template.loader import render_to_string
-from weasyprint import HTML
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, KeepTogether, Table, TableStyle, HRFlowable
+from reportlab.lib.units import inch
+from io import BytesIO
 import csv
 
 # Create your views here.
@@ -292,28 +296,98 @@ def export_list(request, format, list_id=None, status=None):
         
         # Return the HttpResponse that tells the browser to download the newly created csv file
         return response
-        
+    
     elif format == 'pdf':
-        # Create a file name by replacing spaces with underscores and making it lowercase
         filename = list_name.replace(' ', '_').lower() + '.pdf'
+    
+        # BytesIO creates an in-memory buffer to hold the PDF data
+        # This is better than saving to disk because it's faster and doesn't require file cleanup
+        buffer = BytesIO()
+    
+        # SimpleDocTemplate is ReportLab's PDF document builder
+        # Set the page size to normal letter page size and set margins on all sides
+        doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=inch, leftMargin=inch, topMargin=inch, bottomMargin=inch)
+    
+        # getSampleStyleSheet gives us pre-built styles like Title, Heading2, Normal
+        # These control font size, weight, spacing, etc.
+        styles = getSampleStyleSheet()
+    
+        # Clone the Normal style to create a custom link style
+        # clone() copies all existing properties
+        link_style = styles['Normal'].clone('LinkStyle')
+        link_style.textColor = colors.blue
+        link_style.underline = True
+    
+        # elements is a list of content blocks that ReportLab will stack vertically in the PDF
+        # Everything gets added to this list and then built into the PDF at the end
+        elements = []
+    
+        # Add the list name as a large centered title at the top of the PDF
+        elements.append(Paragraph(list_name, styles['Title']))
         
-        # Render the export-pdf HTML template with its context as a string
-        export_HTML_string = render_to_string('lists/export-pdf.html', {'books': books, 'list_name': list_name})
+        # Draw a line under title
+        elements.append(HRFlowable(width="100%", thickness=1, color=colors.black))
         
-        
-        # Use WeasyPrints HTML to create an HTML object from the HTML string which acts as a blueprint
-        html = HTML(string=export_HTML_string)
-        # Convert the HTML object to PDF format and convert it to bytes using WeasyPrints .write_pdf method
-        pdf = html.write_pdf()
-        
-        # Create a pdf response with the pdf data
+        # Spacer to add vertical whitespace
+        elements.append(Spacer(1, 0.3 * inch))
+    
+        # Loop through each book and add its information as a block of content
+        for book in books:
+            book_elements = []
+
+            # Book title as a bold heading
+            book_elements.append(Paragraph(book.title, styles['Heading2']))
+            
+            # Author in normal text
+            book_elements.append(Paragraph(f"by {book.author}", styles['Normal']))
+            book_elements.append(Spacer(1, 0.20 * inch))
+
+            # Show rating as the rating out of 5 if one exists, otherwise show "Not rated"
+            rating_text = f"{book.rating}/5" if book.rating else "Not rated"
+            book_elements.append(Paragraph(f"<b>Genre:</b> {book.get_genre_display()}  |  <b>Rating:</b> {rating_text}", styles['Normal']))
+            book_elements.append(Spacer(1, 0.10 * inch))
+
+            # Only add review if the user wrote one and use a grey background with it
+            if book.review:
+                review_data = [[Paragraph(f"<i>\"{book.review}\"</i>", styles['Normal'])]]
+                review_table = Table(review_data, colWidths=[6.5 * inch])
+                review_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f5f5f5')),
+                    ('LEFTPADDING', (0, 0), (-1, -1), 10),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 10),
+                    ('TOPPADDING', (0, 0), (-1, -1), 8),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                ]))
+                book_elements.append(review_table)
+                book_elements.append(Spacer(1, 0.05 * inch))
+
+            # Only add purchase link if one exists
+            if book.purchase_link:
+                book_elements.append(Spacer(1, 0.05 * inch))
+                book_elements.append(Paragraph(f'<font color="#555555">Purchase:</font> <link href="{book.purchase_link}"><u>Check it out here</u></link>', link_style))
+
+            book_elements.append(Spacer(1, 0.1 * inch))
+            
+            # Divider line between books
+            book_elements.append(HRFlowable(width="100%", thickness=0.5, color=colors.grey))
+            book_elements.append(Spacer(1, 0.15 * inch))
+
+            # Use KeepTogether prevent one book's info from being split across 2 pages
+            elements.append(KeepTogether(book_elements))
+    
+        # Build converts the elements list into the actual PDF and writes it to the buffer
+        doc.build(elements)
+    
+        # Get the PDF bytes from the buffer and close it to free memory
+        pdf = buffer.getvalue()
+        buffer.close()
+    
+        # Return the PDF as a downloadable file response
         response = HttpResponse(pdf, content_type='application/pdf')
-        # Tell browser to download file with the filename
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         
-        # Return the HttpResponse that tells the browser to download the newly created pdf file
         return response    
-        
+    
     else:
         return HttpResponse("Invalid format. Use 'csv' or 'pdf'.", status=400)
         
