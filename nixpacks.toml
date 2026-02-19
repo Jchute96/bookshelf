@@ -1,0 +1,7 @@
+# nixpacks.toml - Railway build configuration
+# WeasyPrint requires system-level C libraries for PDF generation that are not
+# installed on Railway's server by default. This file tells Railway to install
+# them before running the app. Without these, WeasyPrint crashes
+
+[phases.setup]
+nixPkgs = ["gobject-introspection", "pango", "glib", "cairo", "fontconfig"]
