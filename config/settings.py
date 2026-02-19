@@ -36,6 +36,9 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # Hosts/domains that Django is allowed to serve
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
+# Trusted origins for CSRF protection - needed for production forms to work
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost').split()
+
 
 # Application definition
 
