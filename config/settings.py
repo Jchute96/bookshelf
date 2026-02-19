@@ -24,14 +24,17 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
-# SECURITY WARNING: os.environ is a dictionary that stores all environment variables currently loaded and then we get the key from it
+# Secret Key
+# os.environ is a dictionary that stores all environment variables currently loaded and then we get the key from it
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Debug mode
+# Enable detailed error pages locally, disable in production for security
+# Checks if the environment variable is true or false and uses that to determin debug mode
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+# Hosts/domains that Django is allowed to serve
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
 
 # Application definition
@@ -54,6 +57,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Whitenoise handles static files like CSS or images directly so django does not have to
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,6 +134,10 @@ USE_TZ = True
 # Static files 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# WhiteNoise handles static files more efficiently then django
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
