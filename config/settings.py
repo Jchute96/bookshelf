@@ -133,10 +133,12 @@ USE_TZ = True
 
 # Static files 
 STATIC_URL = 'static/'
+# Where static files are during development
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # WhiteNoise handles static files more efficiently then django
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Where Django collects all static files to when preparing for production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
