@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
+# Django settings.py runs every time Django starts up and configures everything it needs to know
+
 from dotenv import load_dotenv
 from pathlib import Path
+import dj_database_url
 import os
 
 # Open the .env file and load everything from it into memory
@@ -79,13 +83,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+# Use DATABASE_URL from environment if available like PostgreSQL on Railway, else use SQLite if running locally
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 
