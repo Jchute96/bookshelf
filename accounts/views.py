@@ -9,6 +9,11 @@ from .models import Profile
 
 # Registration page
 def register(request):
+    
+    #  Redirect to home if user is already logged in
+    if request.user.is_authenticated:
+        return redirect('home')
+    
     # If user submits the registration form
     if request.method == 'POST':
         

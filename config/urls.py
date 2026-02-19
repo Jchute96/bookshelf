@@ -20,7 +20,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
+
 urlpatterns = [
+    # Override the login URL to redirect authenticated users
+    path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user=True)),
     path('admin/', admin.site.urls),
     #  Direct any urls starting with /accounts/ and that are in Django's pre built authentication URLs
     path('accounts/', include('django.contrib.auth.urls')),
