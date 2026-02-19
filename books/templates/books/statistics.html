@@ -41,7 +41,7 @@
                 <div class="row">
                     {% for book in top3_recent_books %}
                     <div class="col-md-4">
-                        <div class="card" style="height: 550px;">
+                        <div class="card">
                             <a href="{% url 'book-detail' book.id %}">
                                 {% if book.image %}
                                     <img src="{{ book.image.url }}" class="card-img-top" style="height: 400px; object-fit: contain; background-color: #f8f9fa;" alt="{{ book.title}}">
