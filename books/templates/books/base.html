@@ -43,6 +43,11 @@
             color: #ffffff;
         }
 
+        /* Make it so that once a button is not being hovered over it does not show the hovering visual anymore */
+        .btn:focus {
+            box-shadow: none;
+        }
+
     </style>
 </head>
 
@@ -54,7 +59,7 @@
 
             <!-- BookShelf on left -->
             <a class="navbar-brand" href="{% url 'home' %}">
-                📚 {{ user.username }}'s Bookshelf
+                📚 {{ user.username }}'s BookShelf
             </a>
 
             <!-- Hamburger menu for mobile -->
