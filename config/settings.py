@@ -149,14 +149,24 @@ STATIC_URL = 'static/'
 # Where static files are during development
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# WhiteNoise handles static files more efficiently then django
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Where Django collects all static files to when preparing for production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Tell Django to use Cloudinary for all user uploaded media files instead of local file system
+STORAGES = {
+    "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+
 
 # Redirect to home books page when a user logs in
 # Redirect to login page when user logs out
