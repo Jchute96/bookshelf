@@ -1,10 +1,14 @@
 # BookShelf - Personal Book Tracking Application
 
+## Live Demo
+[BookShelf Live](https://web-production-6dbf7.up.railway.app/books)
+
+
 ## About
 
-BookShelf is a full-stack Django web application for tracking your personal reading journey. Users can manage their book collection, track books by reading status, organize custom book lists, view reading statistics, and export their book lists to share with others. 
+BookShelf is a deployed full-stack Django web application for tracking your personal reading journey. Users can manage their book collection, track books by reading status, organize custom book lists, view reading statistics, and export their book lists to share with others.
 
-Built as a way to demonstrate full-stack web development skills including Django MVT architecture, user authentication, database design, and responsive UI development. 
+Built to demonstrate full-stack web development skills including Django MVT architecture, user authentication, PostgreSQL database design, cloud media storage, and production deployment.
 
 ## Features
 
@@ -54,15 +58,20 @@ Built as a way to demonstrate full-stack web development skills including Django
 ## Tech Stack
 - Backend: Django 6.0.1
 - Language: Python 3.14
-- Database: SQLite
+- Database: PostgreSQL (production), SQLite (development)
 - Frontend: HTML, Bootstrap 5.2.0
 - Forms: django-crispy-forms with Bootstrap 5
+- Image Storage: Cloudinary
 - Image Handling: Pillow
-- PDF Generation: WeasyPrint
-- Fonts: Inter(Google Fonts)
+- PDF Generation: ReportLab
+- Deployment: Railway
+- Fonts: Inter (Google Fonts)
 
 ## Setup & Installation
 
+A live demo is available at [BookShelf](https://web-production-6dbf7.up.railway.app/books)
+
+To run locally:
 ```bash
 # Clone the repository
 git clone https://github.com/jchute/bookshelf.git
@@ -74,6 +83,13 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Create a .env file with the following variables
+SECRET_KEY=generate_a_random_secret_key  # Generate one at https://djecrety.ir
+DEBUG=True
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 # Run migrations
 python manage.py migrate
