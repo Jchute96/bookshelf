@@ -28,6 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # os.environ is a dictionary that stores all environment variables currently loaded and then we get the key from it
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+# Use Cloudinary to store user images in the cloud so that images are not lost when Railway restarts the server
+# The cloud name identifies the account and key and secret proves you have permission to upload files
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
 # Debug mode
 # Enable detailed error pages locally, disable in production for security
 # Checks if the environment variable is true or false and uses that to determin debug mode
@@ -56,6 +64,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'books',
     'lists',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -146,10 +156,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Create media directory if it does not exist
-MEDIA_ROOT.mkdir(exist_ok=True)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Redirect to home books page when a user logs in
 # Redirect to login page when user logs out
