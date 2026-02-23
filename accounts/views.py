@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm, ProfilePictureForm
 from .models import Profile
+from demo.decorators import demo_restricted
 
 
 # Create your views here.
@@ -41,6 +42,7 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 @login_required
+@demo_restricted
 def profile(request):
     
     # Get the current user information
@@ -51,6 +53,7 @@ def profile(request):
     return render(request, 'accounts/profile.html', context)
 
 @login_required
+@demo_restricted
 def edit_username(request):
     if request.method == 'POST':
         # Fill form with POST data and tell it which user to update
@@ -71,6 +74,7 @@ def edit_username(request):
     return render(request, 'accounts/edit_username.html', context)
         
 @login_required
+@demo_restricted
 def edit_email(request):
     if request.method == 'POST':
         # Fill form with POST data and tell it which user to update
@@ -92,6 +96,7 @@ def edit_email(request):
 
 # Account deletion page
 @login_required
+@demo_restricted
 def delete_account(request):
     if request.method == 'POST':
         form = DeleteAccountForm(request.POST)
@@ -123,6 +128,7 @@ def account_deleted(request):
                 
 # Upload a profile picture
 @login_required
+@demo_restricted
 def upload_profile_picture(request):
     if request.method == 'POST':
         # Fill form with file from the POST data and tell it which users profile to update

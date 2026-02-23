@@ -22,10 +22,13 @@ from django.conf.urls.static import static
 
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from demo.decorators import demo_restricted
 
 urlpatterns = [
     # Override the login URL to redirect authenticated users
     path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user=True)),
+    # Wrap Django's built in password change view with demo_restricted so demo users can not access it
+    path('accounts/password_change/', demo_restricted(auth_views.PasswordChangeView.as_view()), name='password_change'),
     path('admin/', admin.site.urls),
     #  Direct any urls starting with /accounts/ and that are in Django's pre built authentication URLs
     path('accounts/', include('django.contrib.auth.urls')),
