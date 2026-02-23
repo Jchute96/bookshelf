@@ -13,7 +13,7 @@ def demo_restricted(view_func):
         # Check if current user is the demo user
         if request.user.username == 'demo':
             # Add a warning message that will display on the next page and return demo user to home page
-            messages.warning(request, 'This feature is disabled in demo mode.')
+            messages.warning(request, 'Profile features are disabled in demo mode.')
             return redirect('home')
         
         return view_func(request, *args, **kwargs)
