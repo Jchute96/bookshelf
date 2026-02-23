@@ -340,7 +340,7 @@ def export_list(request, format, list_id=None, status=None):
             
             # Author in normal text
             book_elements.append(Paragraph(f"by {book.author}", styles['Normal']))
-            book_elements.append(Spacer(1, 0.20 * inch))
+            book_elements.append(Spacer(1, 0.10 * inch))
 
             # Show rating as the rating out of 5 if one exists, otherwise show "Not rated"
             rating_text = f"{book.rating}/5" if book.rating else "Not rated"
