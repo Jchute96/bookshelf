@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'books',
     'lists',
+    'demo',
     'cloudinary_storage',
     'cloudinary',
 ]
