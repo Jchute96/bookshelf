@@ -1,8 +1,10 @@
 # BookShelf - Personal Book Tracking Application
 
 ## Live Demo
-[BookShelf Live](https://web-production-6dbf7.up.railway.app/books)
 
+**[Try the Demo — no sign up required](https://web-production-6dbf7.up.railway.app/demo-login/)** — click to instantly log in as a demo user pre-loaded with books, lists, and reviews.
+
+Or browse the app as a logged-in user at [BookShelf Live](https://web-production-6dbf7.up.railway.app/books).
 
 ## About
 
