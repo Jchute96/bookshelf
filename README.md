@@ -1,7 +1,5 @@
 # BookShelf - Personal Book Tracking Application
 
-![CI](https://github.com/jchute/bookshelf/actions/workflows/django.yml/badge.svg)
-
 ## Live Demo
 
 **[Try the Demo — no sign up required](https://web-production-6dbf7.up.railway.app/demo-login/)** — click to instantly log in as a demo user pre-loaded with books, lists, and reviews.
