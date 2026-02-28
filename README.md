@@ -1,5 +1,7 @@
 # BookShelf - Personal Book Tracking Application
 
+![CI](https://github.com/jchute/bookshelf/actions/workflows/django.yml/badge.svg)
+
 ## Live Demo
 
 **[Try the Demo — no sign up required](https://web-production-6dbf7.up.railway.app/demo-login/)** — click to instantly log in as a demo user pre-loaded with books, lists, and reviews.
@@ -56,6 +58,44 @@ Built to demonstrate full-stack web development skills including Django MVT arch
 - Detailed reading stats broken down by genre with custom icons
 - Top 5 most read authors
 - Books read per year breakdown
+
+## Testing & CI/CD
+
+The project includes a suite of automated tests covering core functionality across all apps, run automatically on every push and pull request to `main` via GitHub Actions.
+
+### Test Coverage
+
+**Books** (`books/tests.py`)
+- Book model — star display rendering (1, 3, and 5 stars, and no rating)
+- Home view — login redirect, page load, user data isolation
+- Add book — creates book in database and redirects
+- Delete book — removes from database, redirects, blocks unauthenticated users, returns 404 for another user's book
+- Edit book — saves changes and redirects, returns 404 for another user's book
+- Search — by title, by author, case insensitivity, no results
+- Filter — by genre, status, rating, and year finished
+- Statistics — total book count, average rating calculation, zero-state average, top 3 recent 5-star books, date requirement for top 3
+
+**Accounts** (`accounts/tests.py`)
+- Registration — user created in database, profile auto-created, auto-login after registration, duplicate username rejected
+
+**Lists** (`lists/tests.py`)
+- Create list — saves to database and redirects
+- Delete list — removes from database and redirects
+- Add/remove books — book added and removed from list with correct redirects
+- Export — CSV returns correct content type and filename with book data; PDF returns correct content type and filename
+- List detail — page loads and shows books in the list
+- Edit list — renames list and redirects
+- Essential lists — Finished, Currently Reading, and Want to Read each show only books with the matching status
+
+### Running Tests Locally
+
+```bash
+python manage.py test
+```
+
+### CI/CD
+
+Tests run automatically via GitHub Actions on every push and pull request to `main`. The workflow installs dependencies and runs the full test suite against a clean environment.
 
 ## Tech Stack
 - Backend: Django 6.0.1
