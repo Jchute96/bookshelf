@@ -91,10 +91,6 @@ The project includes a suite of automated tests covering core functionality acro
 python manage.py test
 ```
 
-### CI/CD
-
-Tests run automatically via GitHub Actions on every push and pull request to `main`. The workflow installs dependencies and runs the full test suite against a clean environment.
-
 ## Tech Stack
 - Backend: Django 6.0.1
 - Language: Python 3.14
