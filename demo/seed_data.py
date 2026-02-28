@@ -78,17 +78,6 @@ DEMO_BOOKS = [
         "image_url": 'https://res.cloudinary.com/dnxyxrmag/image/upload/v1/media/images/dune_biwjsm',
     },
     {
-        "title": 'Elon Musk',
-        "author": 'Walter Isaacson',
-        "genre": 'biography',
-        "status": 'currently_reading',
-        "rating": 4,
-        "review": '',
-        "date_finished": None,
-        "purchase_link": 'https://www.amazon.com/Elon-Musk-Walter-Isaacson/dp/1982181281/ref=monarch_sidesheet_title',
-        "image_url": 'https://res.cloudinary.com/dnxyxrmag/image/upload/v1/media/images/elonmusk_ofcx5c',
-    },
-    {
         "title": 'Fahrenheit 451',
         "author": 'Ray Bradbury',
         "genre": 'fiction',

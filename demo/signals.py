@@ -1,9 +1,14 @@
+import sys
 from django.contrib.auth.signals import user_logged_in
 from django.utils import timezone
 from datetime import timedelta
 from django.core.management import call_command
 
 def check_demo_reset(sender, user, request, **kwargs):
+
+    # Skip during tests
+    if 'test' in sys.argv:
+        return
 
     # Make sure current user is the demo user
     if user.username != 'demo':

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Book
 from .forms import EditBookForm
@@ -73,8 +73,8 @@ def home(request):
 # List a single book and take a books id as an argument
 @login_required
 def book_detail(request, id):
-    # Query a book by its id
-    book = Book.objects.get(pk=id, user=request.user)
+    # Query a book by its id otherwise get a 404 response
+    book = get_object_or_404(Book, pk=id, user=request.user)
     context = {'book': book}
     return render(request, 'books/book-detail.html', context)
 
@@ -107,8 +107,8 @@ def add_book(request):
 # Edit a book's info and takes id as an argument
 @login_required
 def edit_book(request, id):
-    # Get book to update and make sure logged in user matches the book id
-    book = Book.objects.get(pk=id, user=request.user)
+    # Get book to update and make sure logged in user matches the book id otherwise get a 404 response
+    book = get_object_or_404(Book, pk=id, user=request.user)
     
     form = EditBookForm(instance=book)
     
@@ -128,8 +128,8 @@ def edit_book(request, id):
 # Delete a book, takes id as argument
 @login_required
 def delete_book(request, id):
-    # Grab the book that matches the id and belongs to the current logged in user
-    book = Book.objects.get(pk=id, user=request.user)
+    # Grab the book that matches the id and belongs to the current logged in user otherwise get a 404 response
+    book = get_object_or_404(Book, pk=id, user=request.user)
     if request.method == 'POST':
         book.delete()
         return redirect('home')
