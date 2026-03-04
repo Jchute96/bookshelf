@@ -183,9 +183,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # SendGrid's SMTP server address
 EMAIL_HOST = 'smtp.sendgrid.net'
 # Port 587 is the standard port for sending encrypted emails
-EMAIL_PORT = 587
-# Encrypt the connection so emails can't be intercepted in transit
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465
+
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 # SendGrid requires the string 'apikey' as the username
 EMAIL_HOST_USER = 'apikey'
 # Get the API key from our environment variables
