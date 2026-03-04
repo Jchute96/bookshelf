@@ -14,6 +14,9 @@ def home(request):
     # Retrieve all books from database that belong to the logged in user
     books = Book.objects.filter(user=request.user)
     
+    # Get the total number of books that belong to the user
+    total_books = Book.objects.filter(user=request.user).count()
+    
     # Get all unique years for the filter dropdown
     years = books.dates('date_finished', 'year', order='DESC')
     
@@ -67,7 +70,7 @@ def home(request):
             books = books.order_by('date_finished')
             
     # Include these variables that will be used in the templates
-    context = {'books': books, 'years': years, 'genre': genre, 'status': status, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
+    context = {'books': books, 'total_books': total_books, 'years': years, 'genre': genre, 'status': status, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
     return render(request, 'books/home.html', context)
 
 # List a single book and take a books id as an argument

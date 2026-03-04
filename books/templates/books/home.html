@@ -139,10 +139,17 @@
         <!-- If there are no books that match the filters display an alert letting the user know -->
         {% empty %}
         <div class="col-12">
+            {% if total_books == 0 %}
+            <div class="alert alert-info text-center" role="alert">
+                <h5>No books yet!</h5>
+                <p>Try adding your first book. <a href="{% url 'add-book' %}">Add a book</a></p>
+            </div>
+            {% else %}
             <div class="alert alert-info text-center" role="alert">
                 <h5>No books found matching your filters</h5>
                 <p>Try changing your filter options or <a href="{% url 'home' %}">clear all filters</a></p>
             </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
