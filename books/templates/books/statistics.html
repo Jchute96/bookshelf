@@ -62,7 +62,7 @@
                 </div>
             {% else %}
                 <div class="alert alert-info">
-                    No recent 5-star books yet! Start rating your favorites.
+                    No recent 5-star books yet. Start rating your favorites and adding finished dates to them!
                 </div>
             {% endif %}
         </div>
@@ -117,6 +117,10 @@
                             {% endfor %}
                         </ol>
                     </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No author data yet. Start adding books to see author stats!
                 </div>
             {% endif %}
         </div>
