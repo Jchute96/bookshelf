@@ -178,7 +178,20 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-# Email configuration (prints emails to console for development)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email configuration that says to use SMTP, Simple Mail Transfer Protocol
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# SendGrid's SMTP server address
+EMAIL_HOST = 'smtp.sendgrid.net'
+# Port 587 is the standard port for sending encrypted emails
+EMAIL_PORT = 587
+# Encrypt the connection so emails can't be intercepted in transit
+EMAIL_USE_TLS = True
+# SendGrid requires the string 'apikey' as the username
+EMAIL_HOST_USER = 'apikey'
+# Get the API key from our environment variables
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+# Email users see as the sender in their inbox
+DEFAULT_FROM_EMAIL = 'BookShelf <bookshelf.app.noreply@gmail.com>'
+
 
 
