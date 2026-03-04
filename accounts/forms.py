@@ -44,6 +44,17 @@ class EditUsernameForm(forms.ModelForm):
         
 # Inherit fields from the Model declared in the Meta
 class EditEmailForm(forms.ModelForm):
+    
+    # Method to verify email is okay that is automatically called when we call form.is_valid() in the view
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        
+        # Check if there is another user with the entered email and exclude the users current email from the results
+        if (User.objects.filter(email=email).exclude(pk=self.instance.pk).exists()):
+            raise forms.ValidationError("A user with this email already exists.")
+        
+        return email
+              
     class Meta:
         model = User
         
