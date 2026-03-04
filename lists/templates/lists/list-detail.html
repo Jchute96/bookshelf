@@ -61,10 +61,10 @@
                             <!-- this is the book image -->
                             {% if book.image %}
                             <img src="{{ book.image.url }}" class="card-img-top"
-                                style="width:100%; height:auto; max-height:325px;" />
+                                style="width: 100%; height: 330px; object-fit: contain; background-color: #f8f9fa;" />
                             {% else %}
                             <!-- Display placeholder image if no book cover was uploaded -->
-                            <img src="/static/images/placeholder.png" class="card-img-top" style="height:325px;" />
+                            <img src="/static/images/placeholder.png" class="card-img-top" style="width: 100%; height: 330px; object-fit: contain; background-color: #f8f9fa;" />
                             {% endif %}
                         </a>
                         <div class="card-body"
