@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'demo.apps.DemoConfig',
     'cloudinary_storage',
     'cloudinary',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -178,21 +179,16 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-# Email configuration that says to use SMTP, Simple Mail Transfer Protocol
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# SendGrid's SMTP server address
-EMAIL_HOST = 'smtp.sendgrid.net'
-# Port 587 is the standard port for sending encrypted emails
-EMAIL_PORT = 465
+# Use SendGrid's Web API instead of SMTP to avoid Railway's port blocking
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
 
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-# SendGrid requires the string 'apikey' as the username
-EMAIL_HOST_USER = 'apikey'
-# Get the API key from our environment variables
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
-# Email users see as the sender in their inbox
+# SendGrid API key loaded from environment variables
+ANYMAIL = {
+    'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY'),
+}
+# Email address users see as the sender in their inbox
 DEFAULT_FROM_EMAIL = 'BookShelf <bookshelf.app.noreply@gmail.com>'
+
 
 
 
