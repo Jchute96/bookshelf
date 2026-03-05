@@ -8,4 +8,5 @@ urlpatterns = [
     path('edit-book/<str:id>/', views.edit_book, name='edit-book'),
     path('delete-book/<str:id>/', views.delete_book, name='delete-book'),
     path('statistics/', views.statistics, name='statistics'),
+    path('api/search-google-books/', views.search_google_books, name='search-google-books'),
 ]

@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Book
 from .forms import EditBookForm
 from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
 from django.contrib.auth.decorators import login_required
+import requests
+import os
+
 
 # Use @login_required to make sure only logged in users can access the views
 
@@ -202,6 +205,60 @@ def statistics(request):
     
     # Return statistics.html file filled with context data to browser
     return render(request, 'books/statistics.html', context)
+
+# Connect to Google Books API and get book data to use for add book feature
+@login_required
+def search_google_books(request):
+    
+    # Get the search query entered by user
+    search = request.GET.get('search')
+    
+    # If user tries to search without typing anything then return a error response and do not make request to google api
+    if not search:
+        return JsonResponse({'error': 'No search query provided'}, status=400)
+    
+    # Get the google api key used to connect to google books
+    api_key = os.environ.get('GOOGLE_BOOKS_API_KEY')
+    
+    # Make a GET Request book to the google books api using the api key and the users search query
+    response = requests.get(f'https://www.googleapis.com/books/v1/volumes?q={search}&key={api_key}')
+    
+    # Convert the json formatted response string into a Python dictionary
+    data = response.json()
+    
+    search_results = []
+    
+    for item in data['items']:
+        
+        # Get sales info for purchase link
+        sales_info = item.get('saleInfo', {})  
+        
+        volume_info = item['volumeInfo']
+        
+        title = volume_info['title']
+        
+        # Join authors with ',' if there are multiple authors
+        authors = ', '.join(volume_info.get('authors', []))
+        
+        # Get the genres for the title which is a list and may consist of multiple, or if there is none return an empty list
+        genres = volume_info.get('categories', [])
+        
+        # Get the book images and check to make sure there is an image link and a thumbnail image otherwise return an empty dict or None
+        image = volume_info.get('imageLinks', {}).get('thumbnail', None)
+        small_image = volume_info.get('imageLinks', {}).get('smallThumbnail', None)
+        
+        # Get purchase link or return None if there is not one
+        purchase_link = sales_info.get('buyLink', None)
+        
+        # Add the book info to the search results list as a dictionary
+        search_results.append({'title': title, 'authors': authors, 'genres': genres, 'image': image, 'small_image': small_image, 'purchase_link': purchase_link})
+         
+    # Return Json repsonse as a dictionary containing all of the book data grabbed from google api response
+    return JsonResponse({'results': search_results})
+    
+    
+    
+    
     
     
     

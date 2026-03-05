@@ -4,6 +4,20 @@
 <div class="row justify-content-center">
     <div class="col-md-4">
         <button onclick="history.back()" class="my-3 btn btn-outline-primary btn-sm">Go Back</button>
+
+        <!-- Google Books Search -->
+        <div class="mb-3">
+            <label class="form-label font-weight-bold">Search Google Books</label>
+            <div class="input-group">
+                <!-- Use the id for javascript to read -->
+                <input type="text" id="google-search" class="form-control"  placeholder="Search by title or author...">
+                <button class="btn btn-primary" id="search-btn">Search</button>
+            </div>
+        </div>
+
+        <!-- Search results appear here -->
+        <div id="search-results" class="mb-3"></div>
+
         <div class="card shadow-lg">
             <div class="card-body">
                 <!-- the form for adding a book -->
@@ -14,12 +28,12 @@
                     <!-- this is the label and input for the Title -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Book Title <span style="color: red;">*</span></label>
-                        <input required type="text" name="title" class="form-control" placeholder="Enter Title">
+                        <input required type="text" name="title" id="title" class="form-control" placeholder="Enter Title">
                     </div>
                     <!-- this is the label and input for the Author -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Author <span style="color: red;">*</span></label>
-                        <input required type="text" name="author" class="form-control" placeholder="Enter Author">
+                        <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author">
                     </div>
                     <!-- This is the label and input options for the reading status -->
                      <div class="mb-3">
@@ -34,7 +48,7 @@
                     <!-- this is the label and input for the Genre -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Genre <span style="color: red;">*</span></label>
-                        <select required name="genre" class="form-control">
+                        <select required name="genre" id="genre" class="form-control">
                             <option value="">Select Genre</option>
                             <option value="fiction">Fiction</option>
                             <option value="nonfiction">Non-Fiction</option>
@@ -66,12 +80,12 @@
                     <!-- label and input for the purchase link -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Purchase Link</label>
-                        <input type="url" name="purchase_link" class="form-control" placeholder="https://example.com/book">
+                        <input type="url" name="purchase_link" id="purchase_link" class="form-control" placeholder="https://example.com/book">
                     </div>
                     <!-- this is the label and input for the Image -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Upload Image:</label>
-                        <input type="file" name="image" class="form-control" id="customFile" />
+                        <input type="file" name="image" id="image" class="form-control" />
                     </div>
                     <!-- Submit button -->
                     <button type="submit" class="btn btn-primary btn-block mb-4">Add Book</button>
@@ -80,4 +94,57 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Run this when the search button is clicked
+    document.getElementById('search-btn').addEventListener('click', function() {
+        
+        // Get what the user typed in the search box
+        const query = document.getElementById('google-search').value;
+        
+        // Get the results div so we can display the results in it
+        const resultsDiv = document.getElementById('search-results');
+        
+        // Show a loading message while we wait for results
+        resultsDiv.innerHTML = '<p class="text-muted">Searching...</p>';
+        
+        // Call the Django endpoint set up in views
+        fetch(`/books/api/search-google-books/?search=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear the loading message
+                resultsDiv.innerHTML = '';
+                
+                // Loop through search results and build HTML for each book
+                data.results.forEach(book => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <div class="card mb-2" style="cursor: pointer;">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <img src="${book.small_image || ''}" style="width:50px; height:70px; object-fit:cover;">
+                                <div>
+                                    <strong>${book.title}</strong><br>
+                                    <small>${book.authors}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Fill out the add book form whith book data when a book result is clicked
+                    div.addEventListener('click', function() {
+                        document.getElementById('title').value = book.title;
+                        document.getElementById('author').value = book.authors;
+                        document.getElementById('purchase_link').value = book.purchase_link || '';
+                        // Clear results after selection
+                        resultsDiv.innerHTML = '';
+                    });
+                    
+                    // Add the new resulting book display to the results area
+                    resultsDiv.appendChild(div);
+                });
+            });
+    });
+</script>
 {% endblock %}
