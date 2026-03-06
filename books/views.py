@@ -7,6 +7,7 @@ from django.db.models.functions import ExtractYear
 from django.contrib.auth.decorators import login_required
 import requests
 import os
+import cloudinary.uploader
 
 
 # Use @login_required to make sure only logged in users can access the views
@@ -89,9 +90,26 @@ def book_detail(request, id):
 def add_book(request):
     if request.method == 'POST':
         data = request.POST
-        image = request.FILES.get('image')
         date_finished = data.get('date_finished') or None
         purchase_link = data.get('purchase_link') or None
+        
+        # If user is using a search to upload an image
+        if data.get('image_url'):
+            # Try to use image url to upload to cloudinary
+            try:
+                image_url = data.get('image_url')
+                
+                # Upload image to Cloudinary and store the public_id so backend can build url
+                cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
+                image = cloudinary_result['public_id'].removeprefix('media/')
+            # If it fails use no image
+            except Exception:
+                image = None
+                
+        # If the user uploaded photo manually   
+        else:
+            image = request.FILES.get('image')
+
         
         book = Book.objects.create(
             user = request.user,
@@ -228,7 +246,7 @@ def search_google_books(request):
     
     search_results = []
     
-    for item in data['items']:
+    for item in data.get('items', []):
         
         # Get sales info for purchase link
         sales_info = item.get('saleInfo', {})  
@@ -245,6 +263,11 @@ def search_google_books(request):
         
         # Get the book images and check to make sure there is an image link and a thumbnail image otherwise return an empty dict or None
         image = volume_info.get('imageLinks', {}).get('thumbnail', None)
+        
+        # Get a higher quality version of the image if there is an image
+        if image:
+            image = image.replace('zoom=1', 'zoom=0')
+            
         small_image = volume_info.get('imageLinks', {}).get('smallThumbnail', None)
         
         # Get purchase link or return None if there is not one
