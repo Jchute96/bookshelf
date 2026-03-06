@@ -19,6 +19,7 @@ Built to demonstrate full-stack web development skills including Django MVT arch
 - Track reading status: Want to Read, Currently Reading, Finished
 - 1-5 star rating system with dynamic star display
 - Write and store personal book reviews
+- Google Books API integration — search by title or author to auto-fill book details, cover image, genre, and purchase link
 - Upload book cover images
 - Store purchase links for easy access
 - Organize books by 10 different genres
@@ -126,6 +127,7 @@ DEBUG=True
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key
 
 # Run migrations
 python manage.py migrate
