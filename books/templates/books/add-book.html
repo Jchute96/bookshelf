@@ -7,7 +7,7 @@
 
         <!-- Google Books Search -->
         <div class="mb-3">
-            <label class="form-label font-weight-bold">Search for a Book</label>
+            <label class="form-label font-weight-bold">Find a Book</label>
             <div class="input-group">
                 <!-- Use the id for javascript to read -->
                 <input type="text" id="google-search" class="form-control"  placeholder="Search by title or author...">
@@ -35,16 +35,7 @@
                         <label class="form-label font-weight-bold">Author <span style="color: red;">*</span></label>
                         <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author">
                     </div>
-                    <!-- This is the label and input options for the reading status -->
-                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Reading Status <span style="color: red;">*</span></label>
-                        <select required name="status" class="form-control">
-                            <option value="">Select Reading Status</option>
-                            <option value="currently_reading">Currently Reading</option>
-                            <option value="want_to_read">Want to Read</option>
-                            <option value="finished">Finished</option>
-                        </select>
-                     </div>
+
                     <!-- this is the label and input for the Genre -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Genre <span style="color: red;">*</span></label>
@@ -62,6 +53,18 @@
                             <option value="selfhelp">Self-Help</option>
                         </select>
                     </div>
+
+                    <!-- This is the label and input options for the reading status -->
+                     <div class="mb-3">
+                        <label class="form-label font-weight-bold">Reading Status <span style="color: red;">*</span></label>
+                        <select required name="status" class="form-control">
+                            <option value="">Select Reading Status</option>
+                            <option value="currently_reading">Currently Reading</option>
+                            <option value="want_to_read">Want to Read</option>
+                            <option value="finished">Finished</option>
+                        </select>
+                     </div>
+                    
                     <!-- this is the label and input for the Rating -->
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Rating (1-5)</label>
@@ -96,7 +99,7 @@
                     <div class="mb-3 d-none" id="image-selected-section">
                         <label class="form-label font-weight-bold">Upload Image:</label>
                         <div>
-                            <a href="#" id="remove-image-btn" class="text-danger">Remove image</a>
+                            Book image added — <a href="#" id="remove-image-btn" class="text-danger">Remove image</a>
                         </div>
                     </div>
                     <!-- Submit button -->
@@ -110,7 +113,31 @@
 
 {% block scripts %}
 <script>
-    // Run this when the search button is clicked
+    // Function that takes genres from the google search books and maps it to the genre options for BookShelf
+    function mapGenre(genres) {
+        // If there were no genres leave the option blank
+        if (!genres || genres.length == 0) return '';
+
+        // Take the first genre that the Google search returns and make it lowercase
+        const genre = genres[0].toLowerCase();
+        
+        // Map the genre to the correct genre option
+        if (genre.includes('nonfiction') || genre.includes('non-fiction')) return 'nonfiction';
+        if (genre.includes('science fiction') || genre.includes('sci-fi')) return 'scifi';
+        if (genre.includes('mystery')) return 'mystery';
+        if (genre.includes('fantasy')) return 'fantasy';
+        if (genre.includes('history')) return 'history';
+        if (genre.includes('thriller')) return 'thriller';
+        if (genre.includes('romance')) return 'romance';
+        if (genre.includes('biography')) return 'biography';
+        if (genre.includes('selfhelp') || genre.includes('self-help')) return 'selfhelp';
+        if (genre.includes('fiction')) return 'fiction';
+
+        // Do not pick an option if genre doesn't match any of the options
+        return '';
+    }
+
+    // Run when the search button is clicked
     document.getElementById('search-btn').addEventListener('click', function() {
         
         // Get what the user typed in the search box
@@ -150,6 +177,7 @@
                         document.getElementById('author').value = book.authors;
                         document.getElementById('purchase_link').value = book.purchase_link || '';
                         document.getElementById('image_url').value = book.image || '';
+                        document.getElementById('genre').value = mapGenre(book.genres);
                         // Clear results after selection
                         resultsDiv.innerHTML = '';
                         // Show image selected confirmation message and hide file upload option

@@ -253,7 +253,11 @@ def search_google_books(request):
         
         volume_info = item['volumeInfo']
         
-        title = volume_info['title']
+        title = volume_info.get('title')
+        
+        # If the book has no title skip adding it to the results
+        if not title:
+            continue
         
         # Join authors with ',' if there are multiple authors
         authors = ', '.join(volume_info.get('authors', []))
