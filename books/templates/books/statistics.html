@@ -32,6 +32,24 @@
             </div>
         </div>
     </div>
+
+    <!-- Create new row that will display the users reading goal and their current progress in a progress bar format -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="mb-3">Yearly Reading Goal <a href="{% url 'edit_reading_goal' %}" class="btn btn-outline-primary btn-sm">Edit Goal</a></h3>
+            {% if curr_reading_goal %}
+                <div class="progress">
+                    <div class="progress-bar" style="--progress: {{ goal_progress|floatformat:0 }}%"></div>
+                </div>
+                <p class="text-muted mt-2">{{ curr_year_book_count }} of {{ curr_reading_goal }} book{{ curr_reading_goal|pluralize }}</p>
+            {% else %}
+                <div class="alert alert-info">
+                        <h4>Set a reading goal to start tracking your yearly progress!</h4>
+                        <p><a href="{% url 'edit_reading_goal' %}">Add a new reading goal</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
     
     <!-- Create new row that will display the 3 most recent books that received 5 star ratings -->
     <div class="row mb-4">
@@ -82,7 +100,7 @@
                                 <h5 class="card-title">{{ genre.genre_name }}</h5>
                                 <!-- Add genre icon image -->
                                 <img src="/static/images/genres/{{ genre.genre }}.png" alt="{{ genre.genre }}" style="width: 200px; height: 200px; margin-bottom: 15px;">
-                                <p class="mb-1"><strong>Total {{genre.genre_name }} Books Read:</strong> {{ genre.count }}</p>
+                                <p class="mb-1"><strong>Total {{ genre.genre_name }} Books Read:</strong> {{ genre.count }}</p>
                                 <!-- Display average rating to one decimal place -->
                                 <p class="mb-0"><strong>Average Rating:</strong> {{ genre.avg_rating|floatformat:1 }} ⭐</p>   
                             </div>

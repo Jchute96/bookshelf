@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 import os
 import cloudinary.uploader
+from datetime import date
 
 
 # Use @login_required to make sure only logged in users can access the views
@@ -177,6 +178,19 @@ def statistics(request):
         avg_rating = round(avg_rating, 1)
     else:
         avg_rating = 0
+    
+    # Get the amount of books read this year
+    curr_year_book_count = books.filter(date_finished__year=date.today().year).count()
+    # Get user current reading goal
+    curr_reading_goal = request.user.profile.reading_goal
+    
+    # Determine the percentage completed out of 100 towards the users reading goal
+    if curr_reading_goal:
+        goal_progress = min((curr_year_book_count / curr_reading_goal) * 100, 100)
+    # If no reading goal was set make sure progress is 0 so we do not divide by 0
+    else:
+        goal_progress = 0
+    
         
 
     # Groups the books by each of their genres using .values() 
@@ -218,7 +232,10 @@ def statistics(request):
         'genre_stats': genre_stats,
         'author_stats': author_stats,
         'year_stats': year_stats,
-        'top3_recent_books': top3_recent_books
+        'top3_recent_books': top3_recent_books,
+        'curr_year_book_count': curr_year_book_count,
+        'curr_reading_goal': curr_reading_goal,
+        'goal_progress': goal_progress,
     }
     
     # Return statistics.html file filled with context data to browser

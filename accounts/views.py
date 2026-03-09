@@ -154,7 +154,7 @@ def edit_reading_goal(request):
         
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('statistics')
         
     else:
         form = ReadingGoalForm(instance=request.user.profile)

@@ -53,6 +53,7 @@ Built to demonstrate full-stack web development skills including Django MVT arch
 
 ### Statistics Dashboard
 - Total books read and average rating overview
+- Yearly reading goal with progress bar tracking
 - Recent 5-star favorites display
 - Detailed reading stats broken down by genre with custom icons
 - Top 5 most read authors
