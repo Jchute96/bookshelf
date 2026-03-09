@@ -137,9 +137,8 @@
         return '';
     }
 
-    // Run when the search button is clicked
-    document.getElementById('search-btn').addEventListener('click', function() {
-        
+    // Function that performs the google books api search
+    function performSearch() {
         // Get what the user typed in the search box
         const query = document.getElementById('google-search').value;
         
@@ -191,6 +190,16 @@
                     resultsDiv.appendChild(div);
                 });
             });
+    }
+
+    // Run when the search button is clicked
+    document.getElementById('search-btn').addEventListener('click', performSearch); 
+
+    // Run the search when enter key is pressed
+    document.getElementById('google-search').addEventListener('keydown', function(e) {
+        if (e.key == 'Enter') {
+            performSearch();
+        }
     });
 
     // Remove selected image and show file upload option if remove button clicked
