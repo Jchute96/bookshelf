@@ -92,6 +92,20 @@ class ProfilePictureForm(forms.ModelForm):
                 'accept': 'image/*'
             })
         }
+
+class ReadingGoalForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['reading_goal']
+        
+        widgets = {
+            'reading_goal': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter number of books you want to read this year',
+                'min': 1
+            })
+        }
+    
         
         
     

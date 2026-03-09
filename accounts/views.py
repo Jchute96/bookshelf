@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm, ProfilePictureForm
+from .forms import CustomUserCreationForm, EditUsernameForm, EditEmailForm, DeleteAccountForm, ProfilePictureForm, ReadingGoalForm
 from .models import Profile
 from demo.decorators import demo_restricted
 
@@ -145,6 +145,27 @@ def upload_profile_picture(request):
     context = {'form': form}
     
     return render(request, 'accounts/upload_profile_picture.html', context)
+
+@login_required
+@demo_restricted
+def edit_reading_goal(request):
+    if request.method == 'POST':
+        form = ReadingGoalForm(request.POST, instance=request.user.profile)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        
+    else:
+        form = ReadingGoalForm(instance=request.user.profile)
+        
+    context = {'form': form}
+    
+    return render(request, 'accounts/edit_reading_goal.html', context)
+    
+    
+        
+    
         
             
     

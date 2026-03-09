@@ -39,6 +39,24 @@
         </div>
     </div>
 
+    <!-- Reading Goal Management -->
+     <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Yearly Reading Goal</h4>
+            <div class="row mb-3">
+                <div class="col-md-3"><strong>Reading Goal:</strong></div>
+                {% if user.profile.reading_goal is None %}
+                    <div class="col-md-9">No reading goal set</div>
+                {% else %}
+                    <div class="col-md-9">{{ user.profile.reading_goal }} book{{ user.profile.reading_goal|pluralize }}</div>
+                {% endif %}
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'edit_reading_goal' %}" class="btn btn-primary btn-sm me-2">Edit Reading Goal</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Password Management -->
     <div class="card mb-4">
         <div class="card-body">

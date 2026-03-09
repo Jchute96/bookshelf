@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete-account/', views.delete_account, name='delete_account'),
     path('account-deleted/', views.account_deleted, name='account_deleted'),
     path('upload-profile-picture/', views.upload_profile_picture, name='upload_profile_picture'),
+    path('edit-reading-goal/', views.edit_reading_goal, name='edit_reading_goal'),
 ]
