@@ -61,6 +61,10 @@ class Command(BaseCommand):
                     new_list.books.add(book)
                 except Book.DoesNotExist:
                     self.stdout.write(self.style.WARNING(f'Book not found: {title}'))
+        
+        # Recreate demo users reading goal
+        demo_user.profile.reading_goal = 15
+        demo_user.profile.save()
 
         self.stdout.write(f'Created {len(DEMO_LISTS)} lists')
         self.stdout.write(self.style.SUCCESS('Demo account reset successfully!'))

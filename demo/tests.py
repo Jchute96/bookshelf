@@ -1,11 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from accounts.models import Profile
 from django.urls import reverse
 
 class DemoTests(TestCase):
     
     def setUp(self):
         self.demo_user = User.objects.create_user(username='demo', password='testpass123!')
+        Profile.objects.create(user=self.demo_user)
         self.client.login(username='demo', password='testpass123!')
         
     def test_demo_user_cannot_access_delete_account(self):
@@ -37,6 +39,12 @@ class DemoTests(TestCase):
         self.assertRedirects(response, reverse('home'))
         self.assertContains(response, 'Profile features are disabled in demo mode.')
         
+    def test_demo_user_cannot_access_edit_reading_goal(self):
+         # Act
+        response = self.client.get(reverse('edit_reading_goal'), follow=True)
+        # Assert
+        self.assertRedirects(response, reverse('home'))
+        self.assertContains(response, 'Profile features are disabled in demo mode.')
         
     
     
