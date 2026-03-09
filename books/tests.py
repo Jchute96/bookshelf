@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Book
+from accounts.models import Profile
 from django.urls import reverse
 
 # Create your tests here.
@@ -330,6 +331,7 @@ class StatisticsTests(TestCase):
     
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
+        Profile.objects.create(user=self.user)
         # Four 5-star finished books with different dates
         self.book1 = Book.objects.create(
             user=self.user,
@@ -407,6 +409,8 @@ class StatisticsTests(TestCase):
     def test_statistics_avg_rating_is_0_when_no_finished_books(self):
         # Arrange - Create a new user with no books and sign them in
         new_user = User.objects.create_user(username='newuser', password='testpass123')
+        Profile.objects.create(user=new_user)
+        
         self.client.login(username='newuser', password='testpass123')
         # Act - Get statistics page HTML response which should return 0 for avg
         response = self.client.get(reverse('statistics'))
@@ -430,6 +434,8 @@ class StatisticsTests(TestCase):
     def test_statistics_display_only_top3_books_with_date(self):
         # Arrange
         new_user2 = User.objects.create_user(username='newuser2', password='testpass123')
+        Profile.objects.create(user=new_user2)
+        
         self.client.login(username='newuser2', password='testpass123')
         
         fave_book = Book.objects.create(
