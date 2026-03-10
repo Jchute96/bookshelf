@@ -20,7 +20,7 @@ def home(request):
     books = Book.objects.filter(user=request.user)
     
     # Get the total number of books that belong to the user
-    total_books = Book.objects.filter(user=request.user).count()
+    total_books = books.count()
     
     # Get all unique years for the filter dropdown
     years = books.dates('date_finished', 'year', order='DESC')
