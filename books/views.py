@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from .models import Book
 from .forms import EditBookForm
 from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
 from django.contrib.auth.decorators import login_required
-import requests
-import os
 import cloudinary.uploader
 from datetime import date
+from .services import search_google_books as google_books_search
 
 
 # Function used to apply filters and sorting to the books in the home view
@@ -259,50 +258,12 @@ def search_google_books(request):
     if not search:
         return JsonResponse({'error': 'No search query provided'}, status=400)
     
-    # Get the google api key used to connect to google books
-    api_key = os.environ.get('GOOGLE_BOOKS_API_KEY')
+    # Call the search_google_books function in services.py to make the request to the google books api and get the data back as a list of dictionaries
+    search_results = google_books_search(search)
     
-    # Make a GET Request book to the google books api using the api key and the users search query
-    response = requests.get(f'https://www.googleapis.com/books/v1/volumes?q={search}&key={api_key}')
+    # If the search results is None then there was an error with the request to google api so return an error response and do not try to process the data
+    if search_results is None:
+        return JsonResponse({'error': 'Search is unavailable, try manually adding a book'}, status=503)
     
-    # Convert the json formatted response string into a Python dictionary
-    data = response.json()
-    
-    search_results = []
-    
-    for item in data.get('items', []):
-        
-        # Get sales info for purchase link
-        sales_info = item.get('saleInfo', {})  
-        
-        volume_info = item['volumeInfo']
-        
-        title = volume_info.get('title')
-        
-        # If the book has no title skip adding it to the results
-        if not title:
-            continue
-        
-        # Join authors with ',' if there are multiple authors
-        authors = ', '.join(volume_info.get('authors', []))
-        
-        # Get the genres for the title which is a list and may consist of multiple, or if there is none return an empty list
-        genres = volume_info.get('categories', [])
-        
-        # Get the book images and check to make sure there is an image link and a thumbnail image otherwise return an empty dict or None
-        image = volume_info.get('imageLinks', {}).get('thumbnail', None)
-        
-        # Get a higher quality version of the image if there is an image
-        if image:
-            image = image.replace('zoom=1', 'zoom=0')
-            
-        small_image = volume_info.get('imageLinks', {}).get('smallThumbnail', None)
-        
-        # Get purchase link or return None if there is not one
-        purchase_link = sales_info.get('buyLink', None)
-        
-        # Add the book info to the search results list as a dictionary
-        search_results.append({'title': title, 'authors': authors, 'genres': genres, 'image': image, 'small_image': small_image, 'purchase_link': purchase_link})
-         
     # Return Json repsonse as a dictionary containing all of the book data grabbed from google api response
     return JsonResponse({'results': search_results})
