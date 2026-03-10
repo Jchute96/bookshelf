@@ -10,6 +10,7 @@ import os
 import cloudinary.uploader
 from datetime import date
 
+
 # Function used to apply filters and sorting to the books in the home view
 def apply_filters_and_sort(books, request):
     # Get search value if one was entered
@@ -22,8 +23,7 @@ def apply_filters_and_sort(books, request):
         books = books.filter(
             Q(title__icontains=search) | Q(author__icontains=search))
     
-    #Apply the filters if selected
-    
+    # Apply the filters if selected
     genre = request.GET.get('genre')
     # Filter by a certain genre if selected by user
     if genre:
@@ -64,9 +64,6 @@ def apply_filters_and_sort(books, request):
     return books, genre, status, rating, year, search, sort
 
 
-
-# Use @login_required to make sure only logged in users can access the views
-
 # Display books
 @login_required
 def home(request):
@@ -86,6 +83,7 @@ def home(request):
     context = {'books': books, 'total_books': total_books, 'years': years, 'genre': genre, 'status': status, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
     return render(request, 'books/home.html', context)
 
+
 # List a single book and take a books id as an argument
 @login_required
 def book_detail(request, id):
@@ -93,6 +91,7 @@ def book_detail(request, id):
     book = get_object_or_404(Book, pk=id, user=request.user)
     context = {'book': book}
     return render(request, 'books/book-detail.html', context)
+
 
 # Add a book
 @login_required
@@ -137,6 +136,7 @@ def add_book(request):
     
     return render(request, 'books/add-book.html')
 
+
 # Edit a book's info and takes id as an argument
 @login_required
 def edit_book(request, id):
@@ -158,6 +158,7 @@ def edit_book(request, id):
     context = {'form': form}
     return render(request, 'books/update-book.html', context)
 
+
 # Delete a book, takes id as argument
 @login_required
 def delete_book(request, id):
@@ -169,6 +170,7 @@ def delete_book(request, id):
     
     context = {'book': book}
     return render(request, 'books/delete-book.html', context)
+
 
 # Displays statistics
 @login_required
@@ -199,8 +201,6 @@ def statistics(request):
     else:
         goal_progress = 0
     
-        
-
     # Groups the books by each of their genres using .values() 
     # Use Case to create a new key/value pair for each ggenre name so we can display correct one in html later
     # then uses annotate and Count() to count the amount of id's seen for each book in each genre
@@ -231,8 +231,6 @@ def statistics(request):
     # Filter books to get the books that have a 5 star rating and a date_finished then order them by most recently finished and get top 3
     top3_recent_books = books.filter(rating=5, date_finished__isnull = False).order_by('-date_finished')[:3]
     
-    
-    
     # Create context key value pairs to be used in the html for statistics
     context = {
         'total_books': total_books,
@@ -248,6 +246,7 @@ def statistics(request):
     
     # Return statistics.html file filled with context data to browser
     return render(request, 'books/statistics.html', context)
+
 
 # Connect to Google Books API and get book data to use for add book feature
 @login_required
@@ -307,17 +306,3 @@ def search_google_books(request):
          
     # Return Json repsonse as a dictionary containing all of the book data grabbed from google api response
     return JsonResponse({'results': search_results})
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
