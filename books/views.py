@@ -10,21 +10,8 @@ import os
 import cloudinary.uploader
 from datetime import date
 
-
-# Use @login_required to make sure only logged in users can access the views
-
-# Display books
-@login_required
-def home(request):
-    # Retrieve all books from database that belong to the logged in user
-    books = Book.objects.filter(user=request.user)
-    
-    # Get the total number of books that belong to the user
-    total_books = books.count()
-    
-    # Get all unique years for the filter dropdown
-    years = books.dates('date_finished', 'year', order='DESC')
-    
+# Function used to apply filters and sorting to the books in the home view
+def apply_filters_and_sort(books, request):
     # Get search value if one was entered
     search = request.GET.get('search')
     
@@ -73,6 +60,27 @@ def home(request):
             books = books.order_by('-date_finished')
         case 'date_asc':
             books = books.order_by('date_finished')
+            
+    return books, genre, status, rating, year, search, sort
+
+
+
+# Use @login_required to make sure only logged in users can access the views
+
+# Display books
+@login_required
+def home(request):
+    # Retrieve all books from database that belong to the logged in user
+    books = Book.objects.filter(user=request.user)
+    
+    # Get the total number of books that belong to the user
+    total_books = books.count()
+    
+    # Get all unique years for the filter dropdown
+    years = books.dates('date_finished', 'year', order='DESC')
+    
+    # Apply filters and sorting to the books based on the users selections
+    books, genre, status, rating, year, search, sort = apply_filters_and_sort(books, request)
             
     # Include these variables that will be used in the templates
     context = {'books': books, 'total_books': total_books, 'years': years, 'genre': genre, 'status': status, 'rating': rating, 'year': year, 'search': search, 'sort': sort}
