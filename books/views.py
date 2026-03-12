@@ -12,40 +12,39 @@ from .services import search_google_books as google_books_search
 
 # Function used to apply filters and sorting to the books in the home view
 def apply_filters_and_sort(books, request):
+    
     # Get search value if one was entered
     search = request.GET.get('search')
     
+    # If there is a search value use filter and Q objects to find titles or authors that contains the search input.
+    # icontains checks if the attributes contain the search and is case insensitive.
+    # Q objects allows us to filter using and, or, and not instead of just and
     if search:
-        # If there is a search value use filter and Q objects to find titles or authors that contains the search input.
-        # icontains checks if the attributes contain the search and is case insensitive.
-        # Q objects allows us to filter using and, or, and not instead of just and
         books = books.filter(
             Q(title__icontains=search) | Q(author__icontains=search))
     
-    # Apply the filters if selected
-    genre = request.GET.get('genre')
     # Filter by a certain genre if selected by user
+    genre = request.GET.get('genre')
     if genre:
         books = books.filter(genre=genre)
     
-    rating = request.GET.get('rating')
     # Filter by a certain rating if selected by user
+    rating = request.GET.get('rating')
     if rating:
         books = books.filter(rating=rating)
     
-    year = request.GET.get('year')
     # Filter by a certain year if selected by user
+    year = request.GET.get('year')
     if year:
         books = books.filter(date_finished__year=year)
     
-    status = request.GET.get('status')
     # Filter by a certain status if selected by user
+    status = request.GET.get('status')
     if status:
         books = books.filter(status=status)
-        
-        
-    sort = request.GET.get('sort')
+    
     # Apply the specific sort selected by user if chosen
+    sort = request.GET.get('sort')
     match sort:
         case 'title_asc':
             books = books.order_by('title')
@@ -66,6 +65,7 @@ def apply_filters_and_sort(books, request):
 # Display books
 @login_required
 def home(request):
+    
     # Retrieve all books from database that belong to the logged in user
     books = Book.objects.filter(user=request.user)
     
@@ -86,6 +86,7 @@ def home(request):
 # List a single book and take a books id as an argument
 @login_required
 def book_detail(request, id):
+    
     # Query a book by its id otherwise get a 404 response
     book = get_object_or_404(Book, pk=id, user=request.user)
     context = {'book': book}
@@ -95,6 +96,7 @@ def book_detail(request, id):
 # Add a book
 @login_required
 def add_book(request):
+    
     if request.method == 'POST':
         data = request.POST
         date_finished = data.get('date_finished') or None
@@ -102,6 +104,7 @@ def add_book(request):
         
         # If user is using a search to upload an image
         if data.get('image_url'):
+            
             # Try to use image url to upload to cloudinary
             try:
                 image_url = data.get('image_url')
@@ -109,6 +112,7 @@ def add_book(request):
                 # Upload image to Cloudinary and store the public_id so backend can build url
                 cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
                 image = cloudinary_result['public_id'].removeprefix('media/')
+            
             # If it fails use no image
             except Exception:
                 image = None
@@ -117,7 +121,6 @@ def add_book(request):
         else:
             image = request.FILES.get('image')
 
-        
         book = Book.objects.create(
             user = request.user,
             title = data['title'],
@@ -139,6 +142,7 @@ def add_book(request):
 # Edit a book's info and takes id as an argument
 @login_required
 def edit_book(request, id):
+    
     # Get book to update and make sure logged in user matches the book id otherwise get a 404 response
     book = get_object_or_404(Book, pk=id, user=request.user)
     
@@ -161,8 +165,10 @@ def edit_book(request, id):
 # Delete a book, takes id as argument
 @login_required
 def delete_book(request, id):
+    
     # Grab the book that matches the id and belongs to the current logged in user otherwise get a 404 response
     book = get_object_or_404(Book, pk=id, user=request.user)
+    
     if request.method == 'POST':
         book.delete()
         return redirect('home')
@@ -174,8 +180,10 @@ def delete_book(request, id):
 # Displays statistics
 @login_required
 def statistics(request):
+    
     #  Get all the finished books that belong to the current logged in user
     books = Book.objects.filter(user=request.user).filter(status='finished')
+    
     # Get the number of total books read
     total_books = books.count()
     
@@ -190,12 +198,14 @@ def statistics(request):
     
     # Get the amount of books read this year
     curr_year_book_count = books.filter(date_finished__year=date.today().year).count()
+    
     # Get user current reading goal
     curr_reading_goal = request.user.profile.reading_goal
     
     # Determine the percentage completed out of 100 towards the users reading goal
     if curr_reading_goal:
         goal_progress = min((curr_year_book_count / curr_reading_goal) * 100, 100)
+        
     # If no reading goal was set make sure progress is 0 so we do not divide by 0
     else:
         goal_progress = 0

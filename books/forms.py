@@ -2,6 +2,7 @@ from .models import Book
 from django.forms import ModelForm
 from django import forms
 
+
 # declaring the ModelForm
 class EditBookForm(ModelForm):
     
