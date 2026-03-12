@@ -152,6 +152,16 @@
         fetch(`/books/api/search-google-books/?search=${query}`)
             .then(response => response.json())
             .then(data => {
+                // If there was an error with the search display the error message
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    return;
+                }
+                // If there are no results display a message saying no results found
+                if (data.results.length === 0) {
+                    resultsDiv.innerHTML = '<p class="text-muted">No results found.</p>';
+                    return;
+                }
                 // Clear the loading message
                 resultsDiv.innerHTML = '';
                 
@@ -170,7 +180,7 @@
                         </div>
                     `;
                     
-                    // Fill out the add book form whith book data when a book result is clicked
+                    // Fill out the add book form with book data when a book result is clicked
                     div.addEventListener('click', function() {
                         document.getElementById('title').value = book.title;
                         document.getElementById('author').value = book.authors;
