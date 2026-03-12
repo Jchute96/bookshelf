@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from .models import Book
 from accounts.models import Profile
 from django.urls import reverse
+from .services import search_google_books
+from unittest.mock import patch
 
-# Create your tests here.
 
 class BookModelTests(TestCase):
     
@@ -24,7 +25,7 @@ class BookModelTests(TestCase):
             genre='fiction',
             rating=3
         )
-        
+    
     def test_get_star_display_three_stars(self):
         # Act
         result = self.book.get_star_display()
@@ -54,7 +55,8 @@ class BookModelTests(TestCase):
         result = self.book.get_star_display()
         # Assert
         self.assertEqual(result, '⭐⭐⭐⭐⭐')
-        
+
+
 class HomeViewTests(TestCase):
     
     def setUp(self):
@@ -78,12 +80,11 @@ class HomeViewTests(TestCase):
         )
     
     def test_home_redirects_if_not_logged_in(self):
-        
         # Act - use reverse to look up URL by its name instead of its path
         response = self.client.get(reverse('home'))
         # Assert - Check if there was a redirect to login page
         self.assertRedirects(response, '/accounts/login/?next=/books/')
-        
+      
     def test_home_loads_for_logged_in_user(self):
         # Arrange - log user in
         self.client.login(username='user1', password='testpass123')
@@ -100,11 +101,12 @@ class HomeViewTests(TestCase):
         # Assert
         self.assertNotContains(response, 'User2 Book')
 
+
 class AddBookTests(TestCase):
     
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
-        
+     
     def test_add_book_creates_book_and_redirects(self):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
@@ -119,8 +121,10 @@ class AddBookTests(TestCase):
         # Assert - Check that redirect to home happens and new book exists
         self.assertRedirects(response, '/books/')
         self.assertTrue(Book.objects.filter(title='New Book', user=self.user).exists())
-        
+ 
+
 class DeleteBookTests(TestCase):
+    
     def setUp(self):
         self.user1 = User.objects.create_user(username='user1', password='testpass123')
         self.user2 = User.objects.create_user(username='user2', password='testpass123')
@@ -132,7 +136,7 @@ class DeleteBookTests(TestCase):
             status='finished',
             genre='fiction'
         )
-        
+    
     # Book is removed from database and redirects to home
     def test_delete_book_deletes_book_and_redirects(self):
         # Arrange
@@ -142,7 +146,6 @@ class DeleteBookTests(TestCase):
         # Assert - Make sure we are redirect to home page and that the book no longer exists
         self.assertRedirects(response, '/books/')
         self.assertFalse(Book.objects.filter(pk=self.user1_book.id).exists())
-        
     
     def test_delete_book_redirects_if_not_logged_in(self):
         # Act
@@ -158,8 +161,10 @@ class DeleteBookTests(TestCase):
         # Assert - That the user gets a 404 page response and the book still exists
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Book.objects.filter(pk=self.user1_book.id).exists())
-        
+
+   
 class EditBookTests(TestCase):
+    
     def setUp(self):
         self.user1 = User.objects.create_user(username='user1', password='testpass123')
         self.user2 = User.objects.create_user(username='user2', password='testpass123')
@@ -186,7 +191,7 @@ class EditBookTests(TestCase):
         # Assert
         self.assertRedirects(response, reverse('book-detail', args=[self.user1_book.id]))
         self.assertTrue(Book.objects.filter(title='User1 New Book', user=self.user1).exists())
-        
+      
     def test_edit_book_cannot_edit_another_users_book(self):
         # Arrange
         self.client.login(username='user2', password='testpass123')
@@ -200,8 +205,10 @@ class EditBookTests(TestCase):
         # Assert - The user gets a 404 response and original title has not been changed
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Book.objects.filter(title='User1 Book').exists())
-   
+
+
 class SearchTests(TestCase):
+    
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
         self.book1 = Book.objects.create(
@@ -332,6 +339,7 @@ class StatisticsTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
         Profile.objects.create(user=self.user)
+        
         # Four 5-star finished books with different dates
         self.book1 = Book.objects.create(
             user=self.user,
@@ -369,7 +377,6 @@ class StatisticsTests(TestCase):
             rating=5,
             date_finished='2024-01-01'
         )
-        
         # Lower rated book that makes it so avg is just not all 5s
         self.book5 = Book.objects.create(
             user=self.user,
@@ -380,7 +387,6 @@ class StatisticsTests(TestCase):
             rating=3,
             date_finished='2023-01-01'
         )
-
         # Should not count in statistics
         self.book6 = Book.objects.create(
             user=self.user,
@@ -424,6 +430,7 @@ class StatisticsTests(TestCase):
         # Act - Get the top3 recent books from the response
         response = self.client.get(reverse('statistics'))
         top3 = response.context['top3_recent_books']
+        
         # Assert - Make sure that the top 3 length is right and that oldest top5 book is not included in the top 3
         self.assertEqual(len(top3), 3)
         self.assertIn(self.book1, top3)
@@ -473,3 +480,100 @@ class StatisticsTests(TestCase):
         self.assertIn(fave_book, top3)
         self.assertNotIn(fave_book_without_date, top3)
         self.assertNotIn(book_with_4stars, top3)
+        
+
+class SearchGoogleBooksTests(TestCase):
+    
+    @patch('books.services.requests.get')
+    def test_search_google_books_returns_results(self, mock_get):
+        # Arrange - Set up the mock response data
+        mock_response_data = {
+            'items': [
+                {
+                    'volumeInfo': {
+                        'title': 'Test Book',
+                        'authors': ['Test Author'],
+                        'categories': ['Fiction'],
+                        'imageLinks': {
+                            'thumbnail': 'http://example.com/thumbnail.jpg',
+                            'smallThumbnail': 'http://example.com/small_thumbnail.jpg'
+                        }
+                    },
+                    'saleInfo': {
+                        'buyLink': 'http://example.com/buy'
+                    }
+                }
+            ]
+        }
+        # @patch replaces requests.get with mock_get for this test, and configures .json() to return our fake data
+        mock_get.return_value.json.return_value = mock_response_data
+        
+        # Act 
+        results = search_google_books('test')
+        
+        # Assert
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['title'], 'Test Book')
+        self.assertEqual(results[0]['authors'], 'Test Author')
+        self.assertEqual(results[0]['genres'], ['Fiction'])
+        self.assertEqual(results[0]['image'], 'http://example.com/thumbnail.jpg')
+        self.assertEqual(results[0]['small_image'], 'http://example.com/small_thumbnail.jpg')
+        self.assertEqual(results[0]['purchase_link'], 'http://example.com/buy')
+    
+    @patch('books.services.requests.get')
+    def test_search_google_books_handles_no_title(self, mock_get):
+        # Arrange - Set up the mock response data with no title
+        mock_response_data = {
+            'items': [
+                {
+                    'volumeInfo': {
+                        'authors': ['Test Author'],
+                        'categories': ['Fiction'],
+                        'imageLinks': {
+                            'thumbnail': 'http://example.com/thumbnail.jpg',
+                            'smallThumbnail': 'http://example.com/small_thumbnail.jpg'
+                        }
+                    },
+                    'saleInfo': {
+                        'buyLink': 'http://example.com/buy'
+                    }
+                },
+                {
+                    'volumeInfo': {
+                        'title': 'Test Book',
+                        'authors': ['Test Author'],
+                        'categories': ['Fiction'],
+                        'imageLinks': {
+                            'thumbnail': 'http://example.com/thumbnail.jpg',
+                            'smallThumbnail': 'http://example.com/small_thumbnail.jpg'
+                        }
+                    },
+                    'saleInfo': {
+                        'buyLink': 'http://example.com/buy'
+                    }
+                }  
+            ]      
+        }
+        
+        mock_get.return_value.json.return_value = mock_response_data
+            
+        # Act 
+        results = search_google_books('test')
+            
+        # Assert - The book with no title should be skipped and results should be only the book with a title
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['title'], 'Test Book')
+        
+        
+    @patch('books.services.requests.get')
+    def test_search_google_books_handles_api_error(self, mock_get):
+        # Arrange - Configure the mock to raise an exception when called
+        mock_get.side_effect = Exception('API error')
+        
+        # Act
+        results = search_google_books('test')
+        
+        # Assert - The function should return None if there was an error with the API request
+        self.assertIsNone(results)
+        
+        
