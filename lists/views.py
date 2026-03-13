@@ -12,7 +12,6 @@ from reportlab.lib.units import inch
 from io import BytesIO
 import csv
 
-# Create your views here.
 
 # Display all users lists
 @login_required

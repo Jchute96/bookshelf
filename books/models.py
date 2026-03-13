@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+import uuid
 
 
 # Model for books, each book is associated with a user profile through a foreign key relationship
@@ -25,6 +26,9 @@ class Book(models.Model):
         ('currently_reading', 'Currently Reading'),
         ('finished', 'Finished'),
     ]
+    
+    # Create Universally unique indetifier field that generates a default uuid that is unique and can not be edited
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
     # When user deletes profile delete all of the data associated with their foreign key
     user = models.ForeignKey(User, on_delete=models.CASCADE)

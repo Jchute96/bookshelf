@@ -88,7 +88,7 @@ def home(request):
 def book_detail(request, id):
     
     # Query a book by its id otherwise get a 404 response
-    book = get_object_or_404(Book, pk=id, user=request.user)
+    book = get_object_or_404(Book, uuid=id, user=request.user)
     context = {'book': book}
     return render(request, 'books/book-detail.html', context)
 
@@ -144,7 +144,7 @@ def add_book(request):
 def edit_book(request, id):
     
     # Get book to update and make sure logged in user matches the book id otherwise get a 404 response
-    book = get_object_or_404(Book, pk=id, user=request.user)
+    book = get_object_or_404(Book, uuid=id, user=request.user)
     
     form = EditBookForm(instance=book)
     
@@ -156,7 +156,7 @@ def edit_book(request, id):
             # Save data to database
             form.save()
             # Redirect to the book detail page for the book just updated
-            return redirect('book-detail', id=book.id)
+            return redirect('book-detail', id=book.uuid)
         
     context = {'form': form}
     return render(request, 'books/update-book.html', context)
@@ -167,7 +167,7 @@ def edit_book(request, id):
 def delete_book(request, id):
     
     # Grab the book that matches the id and belongs to the current logged in user otherwise get a 404 response
-    book = get_object_or_404(Book, pk=id, user=request.user)
+    book = get_object_or_404(Book, uuid=id, user=request.user)
     
     if request.method == 'POST':
         book.delete()

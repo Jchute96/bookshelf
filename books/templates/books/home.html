@@ -112,7 +112,7 @@
         {% for book in books %}
         <div class="col-md-3">
             <div class="card my-2" style="height: 550px;">
-                <a href="{% url 'book-detail' book.id %}">
+                <a href="{% url 'book-detail' book.uuid %}">
                     <!-- this is the book image -->
                     {% if book.image %}
                     <img src="{{ book.image.url }}" class="card-img-top"
@@ -132,7 +132,7 @@
                         <p class="text-muted"><small>by <u>{{ book.author }}</u></small></p>
                         <h5>{{ book.get_star_display }}</h5>
                     </div>
-                    <a href="{% url 'book-detail' book.id %}" class="m-2 btn btn-outline-primary btn-sm">View Book</a>
+                    <a href="{% url 'book-detail' book.uuid %}" class="m-2 btn btn-outline-primary btn-sm">View Book</a>
                 </div>
             </div>
         </div>

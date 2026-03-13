@@ -142,25 +142,25 @@ class DeleteBookTests(TestCase):
         # Arrange
         self.client.login(username='user1', password='testpass123')
         # Act - Try to delete the form and use the books id as an argument
-        response = self.client.post(reverse('delete-book', args=[self.user1_book.id]))
+        response = self.client.post(reverse('delete-book', args=[self.user1_book.uuid]))
         # Assert - Make sure we are redirect to home page and that the book no longer exists
         self.assertRedirects(response, '/books/')
-        self.assertFalse(Book.objects.filter(pk=self.user1_book.id).exists())
+        self.assertFalse(Book.objects.filter(uuid=self.user1_book.uuid).exists())
     
     def test_delete_book_redirects_if_not_logged_in(self):
         # Act
-        response = self.client.post(reverse('delete-book', args=[self.user1_book.id]))
+        response = self.client.post(reverse('delete-book', args=[self.user1_book.uuid]))
         # Assert
-        self.assertRedirects(response, f'/accounts/login/?next=/books/delete-book/{self.user1_book.id}/')
+        self.assertRedirects(response, f'/accounts/login/?next=/books/delete-book/{self.user1_book.uuid}/')
         
     def test_delete_book_cannot_delete_another_users_book(self):
         # Arrange
         self.client.login(username='user2', password='testpass123')
         # Act
-        response = self.client.post(reverse('delete-book', args=[self.user1_book.id]))
+        response = self.client.post(reverse('delete-book', args=[self.user1_book.uuid]))
         # Assert - That the user gets a 404 page response and the book still exists
         self.assertEqual(response.status_code, 404)
-        self.assertTrue(Book.objects.filter(pk=self.user1_book.id).exists())
+        self.assertTrue(Book.objects.filter(uuid=self.user1_book.uuid).exists())
 
    
 class EditBookTests(TestCase):
@@ -181,7 +181,7 @@ class EditBookTests(TestCase):
         # Arrange 
         self.client.login(username='user1', password='testpass123')
         # Act
-        response = self.client.post(reverse('edit-book', args=[self.user1_book.id]), {
+        response = self.client.post(reverse('edit-book', args=[self.user1_book.uuid]), {
             'title': 'User1 New Book',
             'author': 'Test Author',
             'status': 'finished',
@@ -189,14 +189,14 @@ class EditBookTests(TestCase):
             })
 
         # Assert
-        self.assertRedirects(response, reverse('book-detail', args=[self.user1_book.id]))
+        self.assertRedirects(response, reverse('book-detail', args=[self.user1_book.uuid]))
         self.assertTrue(Book.objects.filter(title='User1 New Book', user=self.user1).exists())
       
     def test_edit_book_cannot_edit_another_users_book(self):
         # Arrange
         self.client.login(username='user2', password='testpass123')
         # Act - Try to edit another users book
-        response = self.client.post(reverse('edit-book', args=[self.user1_book.id]), {
+        response = self.client.post(reverse('edit-book', args=[self.user1_book.uuid]), {
             'title': 'User1 New Book',
             'author': 'Test Author',
             'status': 'finished',

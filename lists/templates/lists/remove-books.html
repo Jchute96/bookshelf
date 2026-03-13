@@ -18,7 +18,7 @@
                         <!-- Style the checkboxes using bootstrap -->
                         <div class="form-check mb-4">
                             <!-- Create a checkbox for each book and when form submits all checked book IDs are sent together as 'book_ids' -->
-                            <input type="checkbox" name="book_ids" value="{{ book.id }}">
+                            <input type="checkbox" name="book_ids" value="{{ book.uuid }}">
                              <!-- Use truncatechars to limit the title length so it is not too long -->
                             <label>
                                 <strong>{{ book.title|truncatechars:50 }}</strong>
