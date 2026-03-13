@@ -15,6 +15,7 @@ Built to demonstrate full-stack web development skills including Django MVT arch
 ## Features
 
 ### Book Management
+- Books use UUIDs in URLs to prevent users from accessing other users' books
 - Add, view, edit, and delete books
 - Track reading status: Want to Read, Currently Reading, Finished
 - 1-5 star rating system with dynamic star display
