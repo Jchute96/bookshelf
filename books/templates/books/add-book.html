@@ -1,4 +1,5 @@
 {% extends 'books/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -24,67 +25,9 @@
                 <form method="POST" enctype="multipart/form-data" action="">
                     <!-- this is for securing the form from malicious attacks -->
                     {% csrf_token %}
-                    <p class="text-muted"><small><span style="color: red;">*</span> Required fields</small></p>
-                    <!-- this is the label and input for the Title -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Book Title <span style="color: red;">*</span></label>
-                        <input required type="text" name="title" id="title" class="form-control" placeholder="Enter Title">
-                    </div>
-                    <!-- this is the label and input for the Author -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Author <span style="color: red;">*</span></label>
-                        <input required type="text" name="author" id="author" class="form-control" placeholder="Enter Author">
-                    </div>
 
-                    <!-- this is the label and input for the Genre -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Genre <span style="color: red;">*</span></label>
-                        <select required name="genre" id="genre" class="form-control">
-                            <option value="">Select Genre</option>
-                            <option value="fiction">Fiction</option>
-                            <option value="nonfiction">Non-Fiction</option>
-                            <option value="mystery">Mystery</option>
-                            <option value="scifi">Science Fiction</option>
-                            <option value="fantasy">Fantasy</option>
-                            <option value="thriller">Thriller</option>
-                            <option value="romance">Romance</option>
-                            <option value="biography">Biography</option>
-                            <option value="history">History</option>
-                            <option value="selfhelp">Self-Help</option>
-                        </select>
-                    </div>
-
-                    <!-- This is the label and input options for the reading status -->
-                     <div class="mb-3">
-                        <label class="form-label font-weight-bold">Reading Status <span style="color: red;">*</span></label>
-                        <select required name="status" class="form-control">
-                            <option value="">Select Reading Status</option>
-                            <option value="currently_reading">Currently Reading</option>
-                            <option value="want_to_read">Want to Read</option>
-                            <option value="finished">Finished</option>
-                        </select>
-                     </div>
-                    
-                    <!-- this is the label and input for the Rating -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Rating (1-5)</label>
-                        <input type="number" name="rating" class="form-control" placeholder="Enter Rating" min="1" max="5">
-                    </div>
-                    <!-- this is the label and input for the Review -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Review</label>
-                        <textarea name="review" class="form-control" rows="4" placeholder="Write your review here..."></textarea>
-                    </div>
-                    <!-- this is the label and input for the Date Finished -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Date Finished</label>
-                        <input type="date" name="date_finished" class="form-control">
-                    </div>
-                    <!-- label and input for the purchase link -->
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Purchase Link</label>
-                        <input type="url" name="purchase_link" id="purchase_link" class="form-control" placeholder="https://example.com/book">
-                    </div>
+                    <!-- Pipe the AddBookForm through crispy forms -->
+                    {{ form|crispy }}
 
                     <!-- Hidden field to store google books image url for cloudinary upload -->
                      <input type="hidden" name="image_url" id="image_url" value="">
@@ -139,6 +82,7 @@
 
     // Function that performs the google books api search
     function performSearch() {
+        
         // Get what the user typed in the search box
         const query = document.getElementById('google-search').value;
         
@@ -182,11 +126,11 @@
                     
                     // Fill out the add book form with book data when a book result is clicked
                     div.addEventListener('click', function() {
-                        document.getElementById('title').value = book.title;
-                        document.getElementById('author').value = book.authors;
-                        document.getElementById('purchase_link').value = book.purchase_link || '';
+                        document.getElementById('id_title').value = book.title;
+                        document.getElementById('id_author').value = book.authors;
+                        document.getElementById('id_purchase_link').value = book.purchase_link || '';
                         document.getElementById('image_url').value = book.image || '';
-                        document.getElementById('genre').value = mapGenre(book.genres);
+                        document.getElementById('id_genre').value = mapGenre(book.genres);
                         // Clear results after selection
                         resultsDiv.innerHTML = '';
                         // Show image selected confirmation message and hide file upload option

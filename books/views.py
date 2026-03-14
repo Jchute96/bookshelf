@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Book
-from .forms import EditBookForm
+from .forms import EditBookForm, AddBookForm
 from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
 from django.contrib.auth.decorators import login_required
@@ -97,46 +97,43 @@ def book_detail(request, id):
 @login_required
 def add_book(request):
     
-    if request.method == 'POST':
-        data = request.POST
-        date_finished = data.get('date_finished') or None
-        purchase_link = data.get('purchase_link') or None
-        
-        # If user is using a search to upload an image
-        if data.get('image_url'):
-            
-            # Try to use image url to upload to cloudinary
-            try:
-                image_url = data.get('image_url')
-                
-                # Upload image to Cloudinary and store the public_id so backend can build url
-                cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
-                image = cloudinary_result['public_id'].removeprefix('media/')
-            
-            # If it fails use no image
-            except Exception:
-                image = None
-                
-        # If the user uploaded photo manually   
-        else:
-            image = request.FILES.get('image')
-
-        book = Book.objects.create(
-            user = request.user,
-            title = data['title'],
-            author = data['author'],
-            genre = data['genre'],
-            status = data['status'],
-            rating = data.get('rating') or None,
-            review = data['review'],
-            purchase_link = purchase_link,
-            date_finished = date_finished,
-            image = image
-        )
-        
-        return redirect('home')
+    form = AddBookForm()
     
-    return render(request, 'books/add-book.html')
+    if request.method == 'POST':
+        
+        form = AddBookForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            
+            book = form.save(commit=False)
+            
+            # If user is using a search to upload an image
+            if request.POST.get('image_url'):
+            
+                # Try to use image url to upload to cloudinary
+                try:
+                    image_url = request.POST.get('image_url')
+                
+                    # Upload image to Cloudinary and store the public_id so backend can build url
+                    cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
+                    image = cloudinary_result['public_id'].removeprefix('media/')
+            
+                # If it fails use no image
+                except Exception:
+                    image = None
+                
+            # If the user uploaded photo manually   
+            else:
+                image = request.FILES.get('image')
+            
+            book.user = request.user
+            book.image = image
+            
+            book.save()
+            return redirect('home')
+    
+    context = {'form': form}
+    return render(request, 'books/add-book.html', context)
 
 
 # Edit a book's info and takes id as an argument
