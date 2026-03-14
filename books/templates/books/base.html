@@ -56,60 +56,60 @@
 
 <body>
     <!-- Navigation bar -->
-     {% if user.is_authenticated %}
-     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1B2A4A;">
-        <div class="container-fluid">
+    {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1B2A4A;">
+            <div class="container-fluid">
 
-            <!-- BookShelf on left -->
-            <a class="navbar-brand" href="{% url 'home' %}">
-                📚 {{ user.username }}'s BookShelf
-            </a>
+                <!-- BookShelf on left -->
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    📚 {{ user.username }}'s BookShelf
+                </a>
 
-            <!-- Hamburger menu for mobile -->
-            <!-- Use data-bs-toggle=collapse to toggle a collapse animation when button clicked-->
-            <!-- data-bs-target=#navbarNav tells it the elemnt to collapse -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <!-- Hamburger menu for mobile -->
+                <!-- Use data-bs-toggle=collapse to toggle a collapse animation when button clicked-->
+                <!-- data-bs-target=#navbarNav tells it the elemnt to collapse -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <!-- Nav links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Nav links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
 
-                <!-- Left items -->
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my-lists' %}">Lists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                    </li>
-                </ul>
+                    <!-- Left items -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'statistics' %}">Statistics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my-lists' %}">Lists</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                    </ul>
 
-                <!-- Right items -->    
-                <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
-                    <!-- Button to add a book -->
-                    <a href="{% url 'add-book' %}" class="btn btn-primary btn-sm mb-2 mb-lg-0 me-lg-3">+ Add Book</a>
+                    <!-- Right items -->    
+                    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
+                        <!-- Button to add a book -->
+                        <a href="{% url 'add-book' %}" class="btn btn-primary btn-sm mb-2 mb-lg-0 me-lg-3">+ Add Book</a>
                 
-                    <!-- Username display -->
-                    <span class="navbar-text text-light mb-2 mb-lg-0 me-lg-3">
-                        {{ user.username }}
-                    </span>
+                        <!-- Username display -->
+                        <span class="navbar-text text-light mb-2 mb-lg-0 me-lg-3">
+                            {{ user.username }}
+                        </span>
                 
-                    <!-- Logout button -->
-                    <form method="POST" action="{% url 'logout' %}" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
-                    </form>
+                        <!-- Logout button -->
+                        <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     {% endif %}
     <!-- Display any messages -->
     {% if messages %}
