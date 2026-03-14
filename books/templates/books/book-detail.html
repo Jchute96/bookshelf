@@ -6,7 +6,7 @@
     <div class="row">
         <!-- Left column for the book cover image -->
         <div class="col-md-5">
-            <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm mb-3">Go Back</a>
+            <a href="{{ next_url }}" class="btn btn-outline-primary btn-sm mb-3">Go Back</a>
             <!-- Display book cover if there is an image -->
             {% if book.image %}
                 <img class="img-fluid rounded" style="max-height: 600px; width: 100%; object-fit: contain;" src="{{ book.image.url }}" alt="{{ book.title }}">

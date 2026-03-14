@@ -86,9 +86,12 @@ def home(request):
 @login_required
 def book_detail(request, id):
     
+    # Get the next parameter from url to use for go back button otherwise set it to home
+    next_url = request.GET.get('next', '/books/')
+    
     # Query a book by its id otherwise get a 404 response
     book = get_object_or_404(Book, uuid=id, user=request.user)
-    context = {'book': book}
+    context = {'book': book, 'next_url': next_url}
     return render(request, 'books/book-detail.html', context)
 
 

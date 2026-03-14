@@ -224,7 +224,7 @@ def essential_list(request, status):
     
     books = books.order_by('title')
     
-    context = {'books': books, 'list_name': list_name, 'status': status}
+    context = {'books': books, 'list_name': list_name, 'status': status, 'current_path': request.path}
     
     return render(request, 'lists/essential-list.html', context)
 
