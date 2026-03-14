@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import response, HttpResponse
 from .models import BookList
 from books.models import Book
@@ -36,9 +36,7 @@ def my_lists(request):
     finished_books = books.filter(status='finished')[:4]
     currently_reading_books = books.filter(status='currently_reading')[:4]
     want_to_read_books = books.filter(status='want_to_read')[:4]
-    
-    
-    
+      
     context = {
         'lists': lists, 
         'finished_count': finished_count, 
@@ -50,6 +48,7 @@ def my_lists(request):
     }
     
     return render(request, 'lists/my-lists.html', context)
+
 
 # Create a list page
 @login_required
@@ -81,12 +80,13 @@ def create_list(request):
     context = {'form': form}
     return render(request, 'lists/create-list.html', context)
 
+
 # List detail page
 @login_required
 def list_detail(request, list_id):
     
     # Get the user list that matches the list_id
-    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
     
     # Get all books from that list
     books = user_list.books.all()
@@ -94,12 +94,12 @@ def list_detail(request, list_id):
     context = {'user_list': user_list, 'books': books}      
     return render(request, 'lists/list-detail.html', context)
     
-      
+  
 @login_required  
 def add_books(request, list_id):
     
     # Get the user list that matches the list_id
-    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
     
     if request.method == 'POST':
         
@@ -108,8 +108,9 @@ def add_books(request, list_id):
         
         # Iterate through the book ids selected to add by the user
         for book in selected_books:
+            
             # Get the book that matches the primary key taken from book_ids
-            book_to_add = Book.objects.get(pk=book, user=request.user)
+            book_to_add = get_object_or_404(Book, uuid=book, user=request.user)
             
             # Add the book to the users list
             user_list.books.add(book_to_add)
@@ -125,8 +126,7 @@ def add_books(request, list_id):
         
         # Sort the title in ascending order
         books = books.order_by('title')
-        
-        
+            
     context = {'books': books, 'user_list': user_list}
     return render(request, 'lists/add-books.html', context)
 
@@ -135,7 +135,7 @@ def add_books(request, list_id):
 def remove_books(request, list_id):
     
     # Get the user list that matches the list_id
-    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
     
     if request.method == 'POST':
         
@@ -144,8 +144,9 @@ def remove_books(request, list_id):
         
         # Iterate through the book ids selected to remove by the user
         for book in selected_books:
+            
             # Get the book that matches the primary key taken from book_ids
-            book_to_remove = Book.objects.get(pk=book, user=request.user)
+            book_to_remove = get_object_or_404(Book, uuid=book, user=request.user)
             
             # Remove the book from the users list
             user_list.books.remove(book_to_remove)
@@ -160,18 +161,16 @@ def remove_books(request, list_id):
         
         # Sort the title in ascending order
         books = books.order_by('title')
-        
-        
+            
     context = {'books': books, 'user_list': user_list}
     return render(request, 'lists/remove-books.html', context)
     
-            
 
 @login_required
 def edit_list(request, list_id):
     
     # Get the list that will have its name changed
-    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
     
     # If user submits the edit form
     if request.method == 'POST':
@@ -199,7 +198,7 @@ def edit_list(request, list_id):
 @login_required
 def delete_list(request, list_id):
     
-    user_list = BookList.objects.get(pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
     
     if request.method == 'POST':
         user_list.delete()
@@ -229,6 +228,7 @@ def essential_list(request, status):
     
     return render(request, 'lists/essential-list.html', context)
 
+
 # Create view that takes format parameter as well as list_id and status as optional parameters
 @login_required
 def export_list(request, format, list_id=None, status=None):
@@ -237,7 +237,7 @@ def export_list(request, format, list_id=None, status=None):
     if list_id:
         
         # Get the current user list
-        user_list = BookList.objects.get(pk=list_id, user = request.user)
+        user_list = get_object_or_404(BookList, pk=list_id, user = request.user)
         
         # Get all the books from that list
         books = user_list.books.all()
@@ -250,6 +250,7 @@ def export_list(request, format, list_id=None, status=None):
     
     # If user is trying to export a essential list
     else:
+        
         # Get all books for the user filtered by the status value
         books = Book.objects.filter(status=status, user=request.user)
         
@@ -266,6 +267,7 @@ def export_list(request, format, list_id=None, status=None):
         list_name = status_names[status]
            
     if format == 'csv':
+        
         # Create a CSV response
         response = HttpResponse(content_type='text/csv')
         
@@ -297,6 +299,7 @@ def export_list(request, format, list_id=None, status=None):
         return response
     
     elif format == 'pdf':
+        
         filename = list_name.replace(' ', '_').lower() + '.pdf'
     
         # BytesIO creates an in-memory buffer to hold the PDF data
@@ -332,6 +335,7 @@ def export_list(request, format, list_id=None, status=None):
     
         # Loop through each book and add its information as a block of content
         for book in books:
+            
             book_elements = []
 
             # Book title as a bold heading
@@ -357,6 +361,7 @@ def export_list(request, format, list_id=None, status=None):
                     ('TOPPADDING', (0, 0), (-1, -1), 8),
                     ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
                 ]))
+                
                 book_elements.append(review_table)
                 book_elements.append(Spacer(1, 0.05 * inch))
 
@@ -388,6 +393,7 @@ def export_list(request, format, list_id=None, status=None):
         return response    
     
     else:
+        
         return HttpResponse("Invalid format. Use 'csv' or 'pdf'.", status=400)
         
         
