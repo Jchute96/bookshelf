@@ -59,7 +59,7 @@ class AddRemoveBooksTests(TestCase):
         self.client.login(username='testuser', password='testpass123')
         # Act
         response = self.client.post(reverse('add-books', kwargs={'list_id': self.user_list.id}), {
-            'book_ids': [self.book.id],
+            'book_ids': [self.book.uuid],
         })
         # Assert
         self.assertRedirects(response, reverse('list-detail', kwargs={'list_id': self.user_list.id}))
@@ -72,7 +72,7 @@ class AddRemoveBooksTests(TestCase):
         self.user_list.books.add(self.book)
         # Act
         response = self.client.post(reverse('remove-books', kwargs={'list_id': self.user_list.id}), {
-            'book_ids': [self.book.id],
+            'book_ids': [self.book.uuid],
         })
         # Assert
         self.assertRedirects(response, reverse('list-detail', kwargs={'list_id': self.user_list.id}))
