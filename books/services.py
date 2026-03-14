@@ -1,7 +1,22 @@
 import os
 import requests
+import cloudinary.uploader
 
-
+def upload_image_to_cloudinary(image_url):
+    
+    # Try to use image url to upload to cloudinary
+    try:
+                
+        # Upload image to Cloudinary and store the public_id so backend can build url
+        cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
+        image = cloudinary_result['public_id'].removeprefix('media/')
+            
+    # If it fails use no image
+    except Exception:
+        image = None
+    
+    return image
+    
 def search_google_books(search):
     # Get the google api key used to connect to google books
     api_key = os.environ.get('GOOGLE_BOOKS_API_KEY')

@@ -5,9 +5,8 @@ from .forms import EditBookForm, AddBookForm
 from django.db.models import Count, Avg, Case, When, Value, CharField, Q
 from django.db.models.functions import ExtractYear
 from django.contrib.auth.decorators import login_required
-import cloudinary.uploader
 from datetime import date
-from .services import search_google_books as google_books_search
+from .services import search_google_books as google_books_search, upload_image_to_cloudinary
 
 
 # Function used to apply filters and sorting to the books in the home view
@@ -109,18 +108,9 @@ def add_book(request):
             
             # If user is using a search to upload an image
             if request.POST.get('image_url'):
-            
-                # Try to use image url to upload to cloudinary
-                try:
-                    image_url = request.POST.get('image_url')
                 
-                    # Upload image to Cloudinary and store the public_id so backend can build url
-                    cloudinary_result = cloudinary.uploader.upload(image_url, folder='media/images')
-                    image = cloudinary_result['public_id'].removeprefix('media/')
-            
-                # If it fails use no image
-                except Exception:
-                    image = None
+                # Upload image to cloudinary otherwise image variable is assigned none
+                image = upload_image_to_cloudinary(request.POST.get('image_url'))
                 
             # If the user uploaded photo manually   
             else:
