@@ -7,4 +7,4 @@ class RecommendationsConfig(AppConfig):
     # When django starts up ready() is called
     def ready(self):
         # Import signals so they get registerd when Django starts
-        import demo.signals
+        import recommendations.signals
