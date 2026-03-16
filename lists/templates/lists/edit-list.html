@@ -17,7 +17,7 @@
                         <!-- Pipe the form through crispy forms to make it look nice-->
                         {{ form|crispy }}
                         <button type="submit" class="btn btn-primary w-100">Update List Name</button>
-                        <a href="{% url 'list-detail' user_list.id %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                        <a href="{% url 'list-detail' user_list.uuid %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
                     </form>
                 </div>
              </div>

@@ -11,12 +11,12 @@ urlpatterns = [
     path('my-lists/currently-reading/export/<str:format>/', views.export_list, {'status': 'currently_reading'}, name='export-currently-reading'),
     path('my-lists/want-to-read/export/<str:format>/', views.export_list, {'status': 'want_to_read'}, name='export-want-to-read'),
     # Passes number from URL to view as a parameter
-    path('my-lists/<int:list_id>/', views.list_detail, name='list-detail'),
-    path('my-lists/<int:list_id>/add-books/', views.add_books, name='add-books'),
-    path('my-lists/<int:list_id>/remove-books/', views.remove_books, name='remove-books'),
-    path('my-lists/<int:list_id>/edit/', views.edit_list, name='edit-list'),
-    path('my-lists/<int:list_id>/delete/', views.delete_list, name='delete-list'),
-    path('my-lists/<int:list_id>/export/<str:format>/', views.export_list, name='export-list'),
+    path('my-lists/<uuid:id>/', views.list_detail, name='list-detail'),
+    path('my-lists/<uuid:id>/add-books/', views.add_books, name='add-books'),
+    path('my-lists/<uuid:id>/remove-books/', views.remove_books, name='remove-books'),
+    path('my-lists/<uuid:id>/edit/', views.edit_list, name='edit-list'),
+    path('my-lists/<uuid:id>/delete/', views.delete_list, name='delete-list'),
+    path('my-lists/<uuid:id>/export/<str:format>/', views.export_list, name='export-list'),
     
 ]
 
