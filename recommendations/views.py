@@ -15,17 +15,17 @@ def my_recommendations(request):
     
     # If there are no recommendations saved for the user, generate them
     if not recommendations:
-        
+
         recommendations = generate_recommendations(user)
-        
-        # If there are no recommendations generated that means user did not have enough finished books
-        if not recommendations:
-            
+
+        # If None is returned that means user did not have enough finished books
+        if recommendations is None:
+
             # Set flag to display message in template for user to finish and add more books to get recommendations
             not_enough_books = True
-        
-        # Else save the newly generated recommendations as Recommendation objects  
-        else:
+
+        # Else if recommendations were generated save them as Recommendation objects
+        elif recommendations:
             for recommendation in recommendations:
             
                 Recommendation.objects.create(
