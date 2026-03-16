@@ -31,10 +31,10 @@ def my_recommendations(request):
                 Recommendation.objects.create(
                     user=user,
                     title=recommendation['title'],
-                    author=recommendation['author'],
+                    author=recommendation['authors'],
                     cover_link=recommendation['image'],
                     purchase_link=recommendation['purchase_link'],
-                    reason=f"Because you enjoy books by {recommendation['author']}"  
+                    reason=f"Because you enjoy books by {recommendation['searched_author']}"  
                 )
             
             # Get the newly created recommendations for the user

@@ -32,6 +32,9 @@ def generate_recommendations(user):
             
             for result in results[:2]:
                 if result['title'] not in seen_books:
+                    
+                    # Store the favorite author in the results to use to display
+                    result['searched_author'] = author['author']
                     recommendations.append(result)
             
     return recommendations

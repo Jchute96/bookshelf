@@ -59,6 +59,9 @@ def search_google_books(search):
         if image:
             image = image.replace('zoom=1', 'zoom=0')
             
+            # Ensure image URL uses HTTPS so browsers don't block it
+            image = image.replace('http://', 'https://' )
+            
         small_image = volume_info.get('imageLinks', {}).get('smallThumbnail', None)
         
         # Get purchase link or return None if there is not one
