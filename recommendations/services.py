@@ -93,7 +93,9 @@ def get_claude_recommendations(user):
     # System prompt tells Claude who it is and the rules it must follow
     system_prompt = '''You are a book recommendation assistant.
     Recommend books that genuinely exist and are widely available.
+    Never recommend a book if its title appears in the user's seen books list.
     For the reason field, explain specifically why this book matches the user's taste based on their genres or authors.
+    Keep each reason to 1-2 sentences maximum.
     Return only a JSON array like this:
     [{"title": "...", "author": "...", "reason": "..."}]
     No other text, no markdown, no code blocks.'''
@@ -105,7 +107,7 @@ def get_claude_recommendations(user):
     Favorite genres: {genres_text}
     Favorite authors: {authors_text}
 
-    Do not recommend these books: {seen_books_text}
+    Do not recommend these books which belong to user's seen books list: {seen_books_text}
 
     Recommend 6 books this user would enjoy based on their reading history, favorite genres, and favorite authors.'''
 

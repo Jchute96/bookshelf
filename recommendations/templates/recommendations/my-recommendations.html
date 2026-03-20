@@ -13,10 +13,10 @@
     
     <!-- If user has recommendations display them for user -->
     {% elif recommendations %}
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-3 g-2">
             {% for recommendation in recommendations %}
-                <div class="col-md-4">
-                    <div class="card my-2" style="height: 580px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="col">
+                    <div class="card h-100" style="display: flex; flex-direction: column;">
                         <!-- Display cover image of book if it exists -->
                         {% if recommendation.cover_link %}
                             <img src="{{ recommendation.cover_link }}" class="card-img-top"
@@ -32,12 +32,8 @@
                             </h4>
                     
                             <p class="text-muted"><small>by <u>{{ recommendation.author }}</u></small></p>
-
+                            
                             <p>{{ recommendation.reason }}</p>
-                    
-                            {% if recommendation.purchase_link %}
-                                <a target="_blank" rel="noopener noreferrer" href="{{ recommendation.purchase_link }}" class="btn btn-outline-primary btn-sm">Purchase Book</a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
