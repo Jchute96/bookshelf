@@ -2,9 +2,11 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Recommendation
 from django.urls import reverse
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from books.models import Book
-from .services import generate_recommendations
+from .services import generate_recommendations, get_claude_recommendations
+import anthropic
+
 
 class RecommendationsSignalTests(TestCase):
 
@@ -70,7 +72,7 @@ class RecommendationsSignalTests(TestCase):
         self.assertFalse(Recommendation.objects.filter(user=self.user).exists())
 
 
-class RecommendationsServiceTests(TestCase):
+class RecommendationsGenerateRecommendationsTests(TestCase):
     
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
@@ -338,3 +340,128 @@ class RecommendationsViewTests(TestCase):
 
         # Assert - that the no recommendations message is displayed
         self.assertContains(response, 'No recommendations to display at this time.')
+        
+
+class GetClaudeRecommendationsTests(TestCase):
+
+    def setUp(self):
+        
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        
+         # Create 5  books for the user to use later in the tests
+        self.book1 = Book.objects.create(
+            user=self.user,
+            title='Book1',
+            author='Author1',
+            status='finished',
+            genre='fiction',
+            rating=5,
+            date_finished='2024-01-01'
+        )
+        self.book2 = Book.objects.create(
+            user=self.user,
+            title='Book2',
+            author='Author1',
+            status='finished',
+            genre='nonfiction',
+            rating=3,
+            date_finished='2023-01-01'
+        )
+        self.book3 = Book.objects.create(
+            user=self.user,
+            title='Book3',
+            author='Author2',
+            status='finished',
+            rating=4,
+            genre='fiction',
+        )
+        self.book4 = Book.objects.create(
+            user=self.user,
+            title='Book4',
+            author='Author3',
+            status='finished',
+            rating=4,
+            genre='fiction',
+        )
+        self.book5 = Book.objects.create(
+            user=self.user,
+            title='Book5',
+            author='Author4',
+            status='finished',
+            rating=4,
+            genre='fiction',
+        )
+         
+    @patch('recommendations.services.anthropic.Anthropic')
+    @patch('recommendations.services.search_google_books')
+    def test_returns_recommendations_on_success(self, mock_google, mock_anthropic):
+        
+        # Arrange - set up the mock responses
+        
+        # MagicMock creates a fake object that mimics the anthropic client so we can control what it returns without making api calls
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        mock_client.messages.create.return_value.content[0].text = '{"title": "Recommended Book", "author": "Recommended Author", "reason": "Matches your taste"}]'
+        
+        mock_google.return_value = [
+            {
+                'title': 'Recommended Book',
+                'authors': 'Recommended Author',
+                'genres': ['Fiction'],
+                'image': 'http://example.com/image.jpg',
+                'small_image': 'http://example.com/small.jpg',
+                'purchase_link': 'http://example.com/buy'
+            }
+        ]
+
+        # Act
+        results = get_claude_recommendations(self.user)
+
+        # Assert - that the recommendations list is returned with the correct data,
+        # and that the cover and purchase links from Google Books were attached
+        self.assertIsNotNone(results)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['title'], 'Recommended Book')
+        self.assertEqual(results[0]['author'], 'Recommended Author')
+        self.assertEqual(results[0]['cover_link'], 'http://example.com/image.jpg')
+        self.assertEqual(results[0]['purchase_link'], 'http://example.com/buy')
+
+    @patch('recommendations.services.anthropic.Anthropic')
+    def test_returns_none_on_api_failure(self, mock_anthropic):
+
+        # Arrange - set up a mock client and make messages.create raise an APIConnectionError
+        # to simulate the anthropic api being unreachable
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        mock_client.messages.create.side_effect = anthropic.APIConnectionError(request=MagicMock())
+
+        # Act
+        results = get_claude_recommendations(self.user)
+
+        # Assert - that None is returned so the view can fall back to Google Books
+        self.assertIsNone(results)
+
+    @patch('recommendations.services.anthropic.Anthropic')
+    def test_returns_none_on_invalid_json(self, mock_anthropic):
+
+        # Arrange - make Claude return a response that can't be parsed as JSON
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        mock_client.messages.create.return_value.content[0].text = 'this is not valid json'
+
+        # Act
+        results = get_claude_recommendations(self.user)
+
+        # Assert - that None is returned so the view can fall back to Google Books
+        self.assertIsNone(results)
+
+    def test_returns_none_when_not_enough_books(self):
+
+        # Arrange - create a user with no finished books
+        user_without_books = User.objects.create_user(username='testuser2', password='testpass123')
+
+        # Act
+        results = get_claude_recommendations(user_without_books)
+
+        # Assert - that None is returned since the user hasn't finished at least 5 books
+        self.assertIsNone(results)
