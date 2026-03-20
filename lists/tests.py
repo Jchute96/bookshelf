@@ -34,7 +34,7 @@ class DeleteListTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.post(reverse('delete-list', kwargs={'list_id': self.user_list.id}))
+        response = self.client.post(reverse('delete-list', kwargs={'id': self.user_list.uuid}))
         # Assert
         self.assertRedirects(response, reverse('my-lists'))
         self.assertFalse(BookList.objects.filter(pk=self.user_list.id).exists())
@@ -58,11 +58,11 @@ class AddRemoveBooksTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.post(reverse('add-books', kwargs={'list_id': self.user_list.id}), {
+        response = self.client.post(reverse('add-books', kwargs={'id': self.user_list.uuid}), {
             'book_ids': [self.book.uuid],
         })
         # Assert
-        self.assertRedirects(response, reverse('list-detail', kwargs={'list_id': self.user_list.id}))
+        self.assertRedirects(response, reverse('list-detail', kwargs={'id': self.user_list.uuid}))
         self.assertIn(self.book, self.user_list.books.all())
 
     
@@ -71,11 +71,11 @@ class AddRemoveBooksTests(TestCase):
         self.client.login(username='testuser', password='testpass123')
         self.user_list.books.add(self.book)
         # Act
-        response = self.client.post(reverse('remove-books', kwargs={'list_id': self.user_list.id}), {
+        response = self.client.post(reverse('remove-books', kwargs={'id': self.user_list.uuid}), {
             'book_ids': [self.book.uuid],
         })
         # Assert
-        self.assertRedirects(response, reverse('list-detail', kwargs={'list_id': self.user_list.id}))
+        self.assertRedirects(response, reverse('list-detail', kwargs={'id': self.user_list.uuid}))
         self.assertNotIn(self.book, self.user_list.books.all())
 
 
@@ -98,7 +98,7 @@ class ExportListTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.get(reverse('export-list', kwargs={'list_id': self.user_list.id, 'format': 'csv'}))
+        response = self.client.get(reverse('export-list', kwargs={'id': self.user_list.uuid, 'format': 'csv'}))
         # Assert - Check correct content type, book title is in file, and file is named correctly
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'text/csv')
@@ -109,7 +109,7 @@ class ExportListTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.get(reverse('export-list', kwargs={'list_id': self.user_list.id, 'format': 'pdf'}))
+        response = self.client.get(reverse('export-list', kwargs={'id': self.user_list.uuid, 'format': 'pdf'}))
         # Assert - Check correct content type and file is named correctly
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
@@ -135,7 +135,7 @@ class ListDetailTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.get(reverse('list-detail', kwargs={'list_id': self.user_list.id}))
+        response = self.client.get(reverse('list-detail', kwargs={'id': self.user_list.uuid}))
         # Assert - Check the page loads and the book in the list is visible
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Hobbit')
@@ -152,11 +152,11 @@ class EditListTests(TestCase):
         # Arrange
         self.client.login(username='testuser', password='testpass123')
         # Act
-        response = self.client.post(reverse('edit-list', kwargs={'list_id': self.user_list.id}), {
+        response = self.client.post(reverse('edit-list', kwargs={'id': self.user_list.uuid}), {
             'name': 'My Renamed List',
         })
         # Assert - Check redirect happens and the list now has the new name in the database
-        self.assertRedirects(response, reverse('list-detail', kwargs={'list_id': self.user_list.id}))
+        self.assertRedirects(response, reverse('list-detail', kwargs={'id': self.user_list.uuid}))
         self.assertTrue(BookList.objects.filter(name='My Renamed List', user=self.user).exists())
 
 

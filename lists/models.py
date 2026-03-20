@@ -1,9 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from books.models import Book
+import uuid
 
 
 class BookList(models.Model):
+    
+    # Create Universally unique indetifier field that generates a default uuid that is unique and can not be edited
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
     # Each list belongs to one user
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -201,7 +201,7 @@ def statistics(request):
         goal_progress = 0
     
     # Groups the books by each of their genres using .values() 
-    # Use Case to create a new key/value pair for each ggenre name so we can display correct one in html later
+    # Use Case to create a new key/value pair for each genre name so we can display correct one in html later
     # then uses annotate and Count() to count the amount of id's seen for each book in each genre
     # uses Avg() to calculate the average rating for books in that genre
     # use order_by('-count') to sort by count, highest first

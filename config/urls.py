@@ -37,6 +37,7 @@ urlpatterns = [
     path('books/', include('books.urls')),
     path('lists/', include('lists.urls')),
     path('', include('demo.urls')),
+    path('recommendations/', include('recommendations.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

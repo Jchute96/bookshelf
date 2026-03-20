@@ -14,10 +14,10 @@
                     <!-- Manage Books Section -->
                     <div class="mb-4">
                         <h6 class="text-muted mb-2">Manage Books</h6>
-                        <a href="{% url 'add-books' user_list.id %}" class="btn btn-primary btn-sm w-100 mb-2">
+                        <a href="{% url 'add-books' user_list.uuid %}" class="btn btn-primary btn-sm w-100 mb-2">
                             <i class="bi bi-plus-circle"></i> Add Books
                         </a>
-                        <a href="{% url 'remove-books' user_list.id %}" class="btn btn-outline-secondary btn-sm w-100">
+                        <a href="{% url 'remove-books' user_list.uuid %}" class="btn btn-outline-secondary btn-sm w-100">
                             <i class="bi bi-dash-circle"></i> Remove Books
                         </a>
                     </div>
@@ -25,10 +25,10 @@
                     <!-- List Settings Section -->
                     <div class="mb-4">
                         <h6 class="text-muted mb-2">List Settings</h6>
-                        <a href="{% url 'edit-list' user_list.id %}" class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                        <a href="{% url 'edit-list' user_list.uuid %}" class="btn btn-outline-secondary btn-sm w-100 mb-2">
                             <i class="bi bi-pencil"></i> Edit Name
                         </a>
-                        <a href="{% url 'delete-list' user_list.id %}" class="btn btn-outline-danger btn-sm w-100">
+                        <a href="{% url 'delete-list' user_list.uuid %}" class="btn btn-outline-danger btn-sm w-100">
                             <i class="bi bi-trash"></i> Delete List
                         </a>
                     </div>
@@ -36,10 +36,10 @@
                     <!-- Export Section -->
                     <div>
                         <h6 class="text-muted mb-2">Export</h6>
-                        <a href="{% url 'export-list' user_list.id 'csv' %}" class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                        <a href="{% url 'export-list' user_list.uuid 'csv' %}" class="btn btn-outline-secondary btn-sm w-100 mb-2">
                             <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
                         </a>
-                        <a href="{% url 'export-list' user_list.id 'pdf' %}" class="btn btn-outline-secondary btn-sm w-100">
+                        <a href="{% url 'export-list' user_list.uuid 'pdf' %}" class="btn btn-outline-secondary btn-sm w-100">
                             <i class="bi bi-file-earmark-pdf"></i> Export PDF
                         </a>
                     </div>
@@ -57,7 +57,7 @@
                 {% for book in books %}
                 <div class="col-md-4">
                     <div class="card my-2" style="height: 550px;">
-                        <a href="{% url 'book-detail' book.uuid %}?next={% url 'list-detail' user_list.id %}">
+                        <a href="{% url 'book-detail' book.uuid %}?next={% url 'list-detail' user_list.uuid %}">
                             <!-- this is the book image -->
                             {% if book.image %}
                                 <img src="{{ book.image.url }}" class="card-img-top"
@@ -78,7 +78,7 @@
                                 <p class="text-muted"><small>by <u>{{book.author}}</u></small></p>
                                 <h5>{{book.get_star_display}}</h5>
                             </div>
-                            <a href="{% url 'book-detail' book.uuid %}?next={% url 'list-detail' user_list.id %}" class="m-2 btn btn-outline-primary btn-sm">View Book</a>
+                            <a href="{% url 'book-detail' book.uuid %}?next={% url 'list-detail' user_list.uuid %}" class="m-2 btn btn-outline-primary btn-sm">View Book</a>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                 <div class="col-12">
                     <div class="alert alert-info text-center" role="alert">
                         <h5>No books yet in this list</h5>
-                        <p>Try adding a book to your list. <a href="{% url 'add-books' user_list.id %}">Add book</a></p>
+                        <p>Try adding a book to your list. <a href="{% url 'add-books' user_list.uuid %}">Add book</a></p>
                     </div>
                 </div>
                 {% endfor %}

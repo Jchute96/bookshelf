@@ -495,7 +495,7 @@ class SearchGoogleBooksTests(TestCase):
                         'authors': ['Test Author'],
                         'categories': ['Fiction'],
                         'imageLinks': {
-                            'thumbnail': 'http://example.com/thumbnail.jpg',
+                            'thumbnail': 'https://example.com/thumbnail.jpg',
                             'smallThumbnail': 'http://example.com/small_thumbnail.jpg'
                         }
                     },
@@ -516,7 +516,7 @@ class SearchGoogleBooksTests(TestCase):
         self.assertEqual(results[0]['title'], 'Test Book')
         self.assertEqual(results[0]['authors'], 'Test Author')
         self.assertEqual(results[0]['genres'], ['Fiction'])
-        self.assertEqual(results[0]['image'], 'http://example.com/thumbnail.jpg')
+        self.assertEqual(results[0]['image'], 'https://example.com/thumbnail.jpg')
         self.assertEqual(results[0]['small_image'], 'http://example.com/small_thumbnail.jpg')
         self.assertEqual(results[0]['purchase_link'], 'http://example.com/buy')
     

@@ -83,10 +83,10 @@ def create_list(request):
 
 # List detail page
 @login_required
-def list_detail(request, list_id):
+def list_detail(request, id):
     
-    # Get the user list that matches the list_id
-    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
+    # Get the user list that matches the id
+    user_list = get_object_or_404(BookList, uuid=id, user=request.user)
     
     # Get all books from that list
     books = user_list.books.all()
@@ -96,10 +96,10 @@ def list_detail(request, list_id):
     
   
 @login_required  
-def add_books(request, list_id):
+def add_books(request, id):
     
     # Get the user list that matches the list_id
-    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, uuid=id, user=request.user)
     
     if request.method == 'POST':
         
@@ -116,10 +116,10 @@ def add_books(request, list_id):
             user_list.books.add(book_to_add)
     
         # Redirect to list detail page
-        return redirect('list-detail', list_id=list_id)
-    
+        return redirect('list-detail', id=id)
+
     else:
-        
+
         # Get all available books that belong to current user and are not already in list
         # Use exclude to remove books whose ID is in the list
         books = Book.objects.filter(user=request.user).exclude(id__in=user_list.books.all())
@@ -132,10 +132,10 @@ def add_books(request, list_id):
 
 
 @login_required
-def remove_books(request, list_id):
+def remove_books(request, id):
     
     # Get the user list that matches the list_id
-    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, uuid=id, user=request.user)
     
     if request.method == 'POST':
         
@@ -152,10 +152,10 @@ def remove_books(request, list_id):
             user_list.books.remove(book_to_remove)
     
         # Redirect to list detail page
-        return redirect('list-detail', list_id=list_id)
-    
+        return redirect('list-detail', id=id)
+
     else:
-        
+
         # Get all current books that are in the users list
         books = user_list.books.all()
         
@@ -167,10 +167,10 @@ def remove_books(request, list_id):
     
 
 @login_required
-def edit_list(request, list_id):
+def edit_list(request, id):
     
     # Get the list that will have its name changed
-    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, uuid=id, user=request.user)
     
     # If user submits the edit form
     if request.method == 'POST':
@@ -185,7 +185,7 @@ def edit_list(request, list_id):
             form.save()
             
             # Redirect to main lists page
-            return redirect('list-detail', list_id=list_id)
+            return redirect('list-detail', id=id)
     
     # Display form
     else:
@@ -196,9 +196,9 @@ def edit_list(request, list_id):
         
         
 @login_required
-def delete_list(request, list_id):
+def delete_list(request, id):
     
-    user_list = get_object_or_404(BookList, pk=list_id, user=request.user)
+    user_list = get_object_or_404(BookList, uuid=id, user=request.user)
     
     if request.method == 'POST':
         user_list.delete()
@@ -231,13 +231,13 @@ def essential_list(request, status):
 
 # Create view that takes format parameter as well as list_id and status as optional parameters
 @login_required
-def export_list(request, format, list_id=None, status=None):
+def export_list(request, format, id=None, status=None):
     
     # If user is trying to export a custom list
-    if list_id:
+    if id:
         
         # Get the current user list
-        user_list = get_object_or_404(BookList, pk=list_id, user = request.user)
+        user_list = get_object_or_404(BookList, uuid=id, user = request.user)
         
         # Get all the books from that list
         books = user_list.books.all()

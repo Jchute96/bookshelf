@@ -1,0 +1,52 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h1>Your Recommendations</h1>
+    
+    <!-- Display a message if user does not have at least 5 finished books to use for recommendations -->
+    {% if not_enough_books %}
+        <div class="alert alert-info">
+            Read and finish at least 5 books to get personalized recommendations.
+        </div>
+    
+    <!-- If user has recommendations display them for user -->
+    {% elif recommendations %}
+        <div class="row row-cols-1 row-cols-md-3 g-2">
+            {% for recommendation in recommendations %}
+                <div class="col">
+                    <div class="card h-100" style="display: flex; flex-direction: column;">
+                        <!-- Display cover image of book if it exists -->
+                        {% if recommendation.cover_link %}
+                            <img src="{{ recommendation.cover_link }}" class="card-img-top"
+                                style="width: 100%; height: 380px; object-fit: contain; background-color: #f8f9fa;"/>
+                        {% else %}
+                            <!-- Display placeholder image if no book cover was uploaded -->
+                            <img src="/static/images/placeholder.png" class="card-img-top" style="width: 100%; height: 380px; object-fit: contain; background-color: #f8f9fa;" />
+                        {% endif %}
+                        <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <h4 class="card-text"
+                                style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                {{ recommendation.title }}
+                            </h4>
+                    
+                            <p class="text-muted"><small>by <u>{{ recommendation.author }}</u></small></p>
+                            
+                            <p>{{ recommendation.reason }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    
+    <!-- Display a message if there is no recommendations  -->
+    {% else %}
+        <div class="alert alert-info">
+            No recommendations to display at this time.
+        </div>
+        
+    {% endif %}
+</div>
+
+{% endblock %}

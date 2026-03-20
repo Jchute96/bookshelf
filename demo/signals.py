@@ -16,8 +16,8 @@ def check_demo_reset(sender, user, request, **kwargs):
 
     from demo.models import DemoResetLog
 
-    # Get or create the reset log (uses last_reset_at instead of user.last_login,
-    # because Django updates user.last_login before this signal handler runs)
+    # Get or create the reset log, uses last_reset_at instead of user.last_login,
+    # because Django updates user.last_login before this signal handler runs
     log, _ = DemoResetLog.objects.get_or_create(pk=1)
 
     # Trigger a reset if the demo has never been reset, or it has been over 24 hours

@@ -1,0 +1,61 @@
+from django.shortcuts import render
+from .models import Recommendation
+from .services import generate_recommendations, get_claude_recommendations
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def my_recommendations(request):
+    
+    user = request.user
+    not_enough_books = False
+    
+    # Get all recommendations that belong to the current user
+    recommendations = Recommendation.objects.filter(user=user) 
+    
+    # If there are no recommendations saved for the user, generate them
+    if not recommendations:
+        
+        # Try to generate recommendations using claude api and google books api
+        recommendations = get_claude_recommendations(user)
+        
+        # If claude api/google books api fails use the fallback of just generating manually with google books api
+        if not recommendations:
+
+            recommendations = generate_recommendations(user)
+
+        # If None is returned that means user did not have enough finished books
+        if recommendations is None:
+
+            # Set flag to display message in template for user to finish and add more books to get recommendations
+            not_enough_books = True
+
+        # Else if recommendations were generated save them as Recommendation objects
+        elif recommendations:
+            for recommendation in recommendations:
+            
+                Recommendation.objects.create(
+                    user=user,
+                    title=recommendation.get('title'),
+                    
+                    # Use 'or' to handle both manually generated vs claude generated and use .get() instead of []
+                    # to keep program from crashing if key does not exist. Instead it returns None
+                    author=recommendation.get('authors') or recommendation.get('author'),
+                    cover_link=recommendation.get('image') or recommendation.get('cover_link'),
+                    purchase_link=recommendation.get('purchase_link'),
+                    reason=recommendation.get('reason') or f"Because you enjoy books by {recommendation.get('searched_author')}"  
+                )
+            
+            # Get the newly created recommendations for the user
+            recommendations = Recommendation.objects.filter(user=user)
+            
+    context = {'recommendations': recommendations, 'not_enough_books': not_enough_books}
+    return render(request, 'recommendations/my-recommendations.html', context)
+
+    
+        
+    
+    
+    
+    
+    
