@@ -563,8 +563,7 @@ class SearchGoogleBooksTests(TestCase):
         # Assert - The book with no title should be skipped and results should be only the book with a title
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['title'], 'Test Book')
-        
-        
+           
     @patch('books.services.requests.get')
     def test_search_google_books_handles_api_error(self, mock_get):
         # Arrange - Configure the mock to raise an exception when called
@@ -575,5 +574,42 @@ class SearchGoogleBooksTests(TestCase):
         
         # Assert - The function should return None if there was an error with the API request
         self.assertIsNone(results)
+        
+    @patch('books.services.requests.get')
+    def test_search_google_books_handles_rate_limit(self, mock_get):
+        
+        # Arrange - set up mock data that simulates hitting the google books api rate limit
+        mock_get.return_value.status_code = 429
+        mock_get.return_value.json.return_value = {'error': {'code': 429, 'message': 'Rate limit exceeded'}}
+    
+        # Act
+        results = search_google_books('test')
+        
+        # Assert - verify that the search google books function returns empty list when rate limit reached
+        self.assertEqual(results, [])
+        
+    @patch('books.services.requests.get')
+    def test_search_google_books_handles_no_thumbnail(self, mock_get):
+        
+        # Arrange - set up mock data with no image value
+        mock_response_data = {
+            'items': [
+                {
+                    'volumeInfo': {
+                        'title': 'Test Book',
+                        'authors': ['Test Author'],
+                        'categories': ['Fiction'],
+                    }
+                }
+            ]
+        }
+        
+        mock_get.return_value.json.return_value = mock_response_data
+        
+        # Act
+        results = search_google_books('test')
+        
+        # Assert - that the image is assigned None if no image
+        self.assertEqual(results[0]['image'], None)
         
         

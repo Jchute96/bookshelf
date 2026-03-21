@@ -62,5 +62,25 @@ class RegistrationTests(TestCase):
         self.assertEqual(User.objects.filter(username='existinguser').count(), 1)
         
         
+    def test_duplicate_emails_not_created(self):
+        # Arrange - create a user to test duplicate email
+        self.newuser = User.objects.create_user(username='newuser', password='testpass123!', email='newuser@user.com')
+        
+        # Act
+        response = self.client.post(reverse('register'), {
+            'username': 'newuser2',
+            'email': 'newuser@user.com',
+            'password1': 'testpass123!',
+            'password2': 'testpass123!',
+        })
+        
+        # Assert - duplicate account not created and error message display
+        self.assertContains(response, 'A user with this email already exists.')
+        self.assertFalse(User.objects.filter(username='newuser2').exists())
+        
+        
+        
+        
+        
        
     
