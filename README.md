@@ -34,9 +34,8 @@ Built to demonstrate full-stack web development skills including Django MVT arch
 ### User Authentication & Profiles
 - Full multi-user support with private bookshelves
 - User registration, login, logout
-- Profile management - edit username and email
+- Profile management - edit username, email, or password
 - Profile picture upload
-- Password change and reset via email
 - Secure account deletion with password confirmation
 - Authenticated user redirects on login/register pages
 
